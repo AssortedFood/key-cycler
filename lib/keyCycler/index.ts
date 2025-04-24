@@ -63,7 +63,7 @@ export function __resetCyclers__() {
   Object.keys(cyclers).forEach(api => delete cyclers[api])
 }
 
-export function debugState(apiName: string) {
+export function _debugState(apiName: string) {
   const state = cyclers[apiName];
   if (!state) return null;
   return {
@@ -72,3 +72,8 @@ export function debugState(apiName: string) {
     usage: { ...state.usage }
   };
 }
+// Conditionally export debugState for test or debug builds
+if (process.env.NODE_ENV === 'test' || process.env.DEBUG_MODE === 'true') {
+  exports.debugState = _debugState
+}
+

@@ -62,3 +62,13 @@ export function markKeyAsFailed(apiName: string, key: string) {
 export function __resetCyclers__() {
   Object.keys(cyclers).forEach(api => delete cyclers[api])
 }
+
+export function debugState(apiName: string) {
+  const state = cyclers[apiName];
+  if (!state) return null;
+  return {
+    keys: [...state.keys],
+    index: state.index,
+    usage: { ...state.usage }
+  };
+}

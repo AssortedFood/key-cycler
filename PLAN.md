@@ -35,7 +35,7 @@ Create a mock API to test the key-cycler utility with fake API keys, simulating 
 | [x] | 2.2 | Load fake env keys (`ENV_FAKEAPI_KEY1`, `KEY2`, `KEY3`, etc.) |
 | [ ] | 2.3 | Test: basic call to `/speak` uses a valid key and returns 200 |
 | [x] | 2.4.1 | Set up env with 2–3 fake keys |
-| [ ] | 2.4.2 | Call `/speak` repeatedly until all keys are exhausted |
+| [x] | 2.4.2 | Call `/speak` repeatedly until all keys are exhausted |
 | [ ] | 2.4.3 | Expect 429 or final fallback to throw from `getKey()` |
 | [ ] | 2.5.1 | Simulate 429 for a specific key in server logic |
 | [ ] | 2.5.2 | Call `markKeyAsFailed("fakeapi", key)` in response |

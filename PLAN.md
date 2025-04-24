@@ -11,19 +11,19 @@ Create a mock API to test the key-cycler utility with fake API keys, simulating 
 | ✅ | Subtask | Description |
 |----|---------|-------------|
 | [x] | 1.1 | Create file: `mock/fakeApiServer.ts` |
-| [ ] | 1.2 | Set up Express app with one route: `POST /speak` |
-| [ ] | 1.3 | Accept header `xi-api-key` and simulate a JSON payload |
-| [ ] | 1.4.1 | Create an in-memory `Map<string, number>` to track key usage |
-| [ ] | 1.4.2 | Increment the count for `xi-api-key` on each request |
-| [ ] | 1.4.3 | Create helper `resetKeyUsage()` to clear internal usage state |
-| [ ] | 1.4.4 | Export usage map if needed for debug assertions |
-| [ ] | 1.5.1 | Define a rate limit threshold (e.g., `RATE_LIMIT = 5`) |
-| [ ] | 1.5.2 | If usage exceeds `RATE_LIMIT`, return `429 Too Many Requests` |
-| [ ] | 1.5.3 | Otherwise return a dummy success payload (e.g. `{ audio: "fake_data" }`) |
-| [ ] | 1.6 | Return 400 or 401 on missing/malformed headers for robustness |
-| [ ] | 1.7.1 | Implement `startMockServer(port): Promise<Server>` |
-| [ ] | 1.7.2 | Implement `stopMockServer(server): Promise<void>` |
-| [ ] | 1.7.3 | Ensure compatibility with Vitest lifecycle (`beforeAll` / `afterAll`) |
+| [x] | 1.2 | Set up Express app with one route: `POST /speak` |
+| [x] | 1.3 | Accept header `xi-api-key` and simulate a JSON payload |
+| [x] | 1.4.1 | Create an in-memory `Map<string, number>` to track key usage |
+| [x] | 1.4.2 | Increment the count for `xi-api-key` on each request |
+| [x] | 1.4.3 | Create helper `resetKeyUsage()` to clear internal usage state |
+| [x] | 1.4.4 | Export usage map if needed for debug assertions |
+| [x] | 1.5.1 | Define a rate limit threshold (e.g., `RATE_LIMIT = 5`) |
+| [x] | 1.5.2 | If usage exceeds `RATE_LIMIT`, return `429 Too Many Requests` |
+| [x] | 1.5.3 | Otherwise return a dummy success payload (e.g. `{ audio: "fake_data" }`) |
+| [x] | 1.6 | Return 400 or 401 on missing/malformed headers for robustness |
+| [x] | 1.7.1 | Implement `startMockServer(port): Promise<Server>` |
+| [x] | 1.7.2 | Implement `stopMockServer(server): Promise<void>` |
+| [x] | 1.7.3 | Ensure compatibility with Vitest lifecycle (`beforeAll` / `afterAll`) |
 
 ---
 
@@ -31,7 +31,7 @@ Create a mock API to test the key-cycler utility with fake API keys, simulating 
 
 | ✅ | Subtask | Description |
 |----|---------|-------------|
-| [ ] | 2.1 | Create test file `tests/integration/keyCycler.integration.test.ts` |
+| [x] | 2.1 | Create test file `tests/integration/keyCycler.integration.test.ts` |
 | [ ] | 2.2 | Load fake env keys (`ENV_FAKEAPI_KEY1`, `KEY2`, `KEY3`, etc.) |
 | [ ] | 2.3 | Test: basic call to `/speak` uses a valid key and returns 200 |
 | [ ] | 2.4.1 | Set up env with 2–3 fake keys |

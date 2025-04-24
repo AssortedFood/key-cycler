@@ -40,7 +40,7 @@ Create a mock API to test the key-cycler utility with fake API keys, simulating 
 | [x] | 2.5.1 | Simulate 429 for a specific key in server logic |
 | [x] | 2.5.2 | Call `markKeyAsFailed("fakeapi", key)` in response |
 | [x] | 2.5.3 | Expect next call to `getKey("fakeapi")` to yield a new key |
-| [ ] | 2.5.4 | Optionally simulate retry logic at app level |
+| [x] | 2.5.4 | Optionally simulate retry logic at app level |
 | [ ] | 2.6 | Assert key usage map reflects accurate usage totals |
 | [ ] | 2.7 | Confirm server shuts down cleanly after test runs |
 

@@ -1,1 +1,0 @@
-export function loadKeysFromEnv(apiName: string): string[] {  const keys: string[] = [];  const prefix = `ENV_${apiName.toUpperCase()}_KEY`;  let index = 1;  while (true) {    const envVar = `${prefix}${index}`;    const key = process.env[envVar] || "";    if (!key) break;    keys.push(key);    index++;  }  return keys;}

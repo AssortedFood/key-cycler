@@ -32,7 +32,7 @@ Create a mock API to test the key-cycler utility with fake API keys, simulating 
 | ✅ | Subtask | Description |
 |----|---------|-------------|
 | [x] | 2.1 | Create test file `tests/integration/keyCycler.integration.test.ts` |
-| [ ] | 2.2 | Load fake env keys (`ENV_FAKEAPI_KEY1`, `KEY2`, `KEY3`, etc.) |
+| [x] | 2.2 | Load fake env keys (`ENV_FAKEAPI_KEY1`, `KEY2`, `KEY3`, etc.) |
 | [ ] | 2.3 | Test: basic call to `/speak` uses a valid key and returns 200 |
 | [ ] | 2.4.1 | Set up env with 2–3 fake keys |
 | [ ] | 2.4.2 | Call `/speak` repeatedly until all keys are exhausted |

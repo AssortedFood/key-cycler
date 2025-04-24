@@ -18,7 +18,7 @@ This enables internal key cycling, retry logic, and automatic exhaustion trackin
 
 | ✅ | Subtask | Description |
 |----|---------|-------------|
-| [ ] | 1.1 | Create a new file: `lib/keyCycler/index.ts` |
+| [x] | 1.1 | Create a new file: `lib/keyCycler/index.ts` |
 | [ ] | 1.2 | Define a `CyclerState` type to hold keys, usage count, and index |
 | [ ] | 1.3 | Write `loadKeysFromEnv(apiName: string): string[]` helper |
 | [ ] | 1.4 | Create internal map `const cyclers: Record<string, CyclerState>` |

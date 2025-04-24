@@ -1,106 +1,105 @@
-# Refactor Plan: KeyCycler as a Centralised Singleton Utility
+# PLAN.md
 
-## ✅ Objective
+## 🧪 Objective
 
-Refactor the KeyCycler utility to support the usage:
-
-```js
-const key = await getKey("elevenlabs");
-```
-
-This enables internal key cycling, retry logic, and automatic exhaustion tracking, abstracted away from integration points.
+Create a mock API to test the key-cycler utility with fake API keys, simulating rate limiting behaviour (`429 Too Many Requests`) and verifying that `getKey` and `markKeyAsFailed` behave correctly without needing access to a real API (like ElevenLabs).
 
 ---
 
-## 📋 Task Breakdown
-
-### Step 1: Setup New KeyCycler Utility
+## 🧱 Step 1: Build the Mock API
 
 | ✅ | Subtask | Description |
 |----|---------|-------------|
-| [x] | 1.1 | Create a new file: `lib/keyCycler/index.ts` |
-| [x] | 1.2 | Define a `CyclerState` type to hold keys, usage count, and index |
-| [x] | 1.3 | Write `loadKeysFromEnv(apiName: string): string[]` helper |
-| [x] | 1.4 | Create internal map `const cyclers: Record<string, CyclerState>` |
-| [x] | 1.5 | Implement `async getKey(apiName: string): Promise<string>` |
-| [x] | 1.6 | Implement `markKeyAsFailed(apiName: string, key: string)` function |
-| [x] | 1.7 | Export `getKey` and `markKeyAsFailed` from the module |
+| [ ] | 1.1 | Create file: `mock/fakeApiServer.ts` |
+| [ ] | 1.2 | Set up Express app with one route: `POST /speak` |
+| [ ] | 1.3 | Accept header `xi-api-key` and simulate a JSON payload |
+| [ ] | 1.4.1 | Create an in-memory `Map<string, number>` to track key usage |
+| [ ] | 1.4.2 | Increment the count for `xi-api-key` on each request |
+| [ ] | 1.4.3 | Create helper `resetKeyUsage()` to clear internal usage state |
+| [ ] | 1.4.4 | Export usage map if needed for debug assertions |
+| [ ] | 1.5.1 | Define a rate limit threshold (e.g., `RATE_LIMIT = 5`) |
+| [ ] | 1.5.2 | If usage exceeds `RATE_LIMIT`, return `429 Too Many Requests` |
+| [ ] | 1.5.3 | Otherwise return a dummy success payload (e.g. `{ audio: "fake_data" }`) |
+| [ ] | 1.6 | Return 400 or 401 on missing/malformed headers for robustness |
+| [ ] | 1.7.1 | Implement `startMockServer(port): Promise<Server>` |
+| [ ] | 1.7.2 | Implement `stopMockServer(server): Promise<void>` |
+| [ ] | 1.7.3 | Ensure compatibility with Vitest lifecycle (`beforeAll` / `afterAll`) |
 
 ---
 
-### Step 2: Integrate Into ElevenLabs
+## 🧪 Step 2: Write Integration Tests with Mock API
 
 | ✅ | Subtask | Description |
 |----|---------|-------------|
-| [x] | 2.1 | Modify `lib/elevenlabs.js` to `import { getKey, markKeyAsFailed }` |
-| [x] | 2.2 | Replace `process.env.ELEVENLABS_API_KEY` with `await getKey("elevenlabs")` |
-| [x] | 2.3 | Catch `429` errors and call `markKeyAsFailed("elevenlabs", key)` |
-| [x] | 2.4 | Ensure the function signature of `textToSpeech()` remains unchanged |
+| [ ] | 2.1 | Create test file `tests/integration/keyCycler.integration.test.ts` |
+| [ ] | 2.2 | Load fake env keys (`ENV_FAKEAPI_KEY1`, `KEY2`, `KEY3`, etc.) |
+| [ ] | 2.3 | Test: basic call to `/speak` uses a valid key and returns 200 |
+| [ ] | 2.4.1 | Set up env with 2–3 fake keys |
+| [ ] | 2.4.2 | Call `/speak` repeatedly until all keys are exhausted |
+| [ ] | 2.4.3 | Expect 429 or final fallback to throw from `getKey()` |
+| [ ] | 2.5.1 | Simulate 429 for a specific key in server logic |
+| [ ] | 2.5.2 | Call `markKeyAsFailed("fakeapi", key)` in response |
+| [ ] | 2.5.3 | Expect next call to `getKey("fakeapi")` to yield a new key |
+| [ ] | 2.5.4 | Optionally simulate retry logic at app level |
+| [ ] | 2.6 | Assert key usage map reflects accurate usage totals |
+| [ ] | 2.7 | Confirm server shuts down cleanly after test runs |
 
 ---
 
-### Step 3: Configuration & Key Management
+## 🧩 Step 3: Enhance KeyCycler for Test Support
 
 | ✅ | Subtask | Description |
 |----|---------|-------------|
-| [ ] | 3.1 | Update `.env.local` to use `ENV_ELEVENLABS_KEY1`, `KEY2`, etc. |
-| [ ] | 3.2 | Document the required format for ElevenLabs in `NAMING.md` |
-| [ ] | 3.3 | Update `README.md` to reflect new usage style with `getKey()` |
+| [ ] | 3.1.1 | Add `debugState(apiName)` to return internal key usage state |
+| [ ] | 3.1.2 | Ensure it's typed defensively (read-only or cloned) |
+| [ ] | 3.1.3 | Export `debugState` only for testing/debug builds |
+| [ ] | 3.2 | (Optional) Add logging for key cycling for local inspection |
 
 ---
 
-### Step 4: Testing & Diagnostics
-
-| ✅ | Subtask | Description |
-|----|---------|-------------|
-| [ ] | 4.1 | Create a test file: `tests/lib/keyCycler.test.ts` |
-| [ ] | 4.2 | Write tests for `getKey()` rotation logic |
-| [ ] | 4.3 | Write tests for `markKeyAsFailed()` effect |
-| [x] | 4.4 | Add test for ElevenLabs using mocked `getKey()` logic |
-| [ ] | 4.5 | (Optional) Add `debugState(apiName)` export for internal state logging |
-
----
-
-### Step 5: Cleanup & Migration
-
-| ✅ | Subtask | Description |
-|----|---------|-------------|
-| [ ] | 5.1 | Remove `usageMap` from old KeyCycler implementation |
-| [ ] | 5.2 | Deprecate or archive `src/fakeApi.ts` if no longer needed |
-| [ ] | 5.3 | (Optional) Migrate other APIs like GPT to use `getKey()` utility |
-
----
-
-## 🔄 Dependencies
+## 🔁 Dependencies
 
 | Subtask | Depends On |
 |---------|------------|
-| 2.2 | 1.5 |
-| 2.3 | 1.6 |
-| 2.1 | 1.7 |
-| 3.2 | 3.1 |
-| 3.3 | 1.5 |
-| 4.4 | 1.7, 2.2 |
-| 5.1 | 1.5, 1.6 |
-| 5.2 | 5.1 |
+| 1.5.2 | 1.4.1, 1.5.1 |
+| 1.5.3 | 1.5.2 |
+| 2.2 | 1.7.1 |
+| 2.3 | 1.2, 1.3 |
+| 2.4.2 | 1.5.2 |
+| 2.4.3 | 2.4.2 |
+| 2.5.2 | 2.5.1 |
+| 2.5.3 | 2.5.2 |
+| 2.6 | 1.4.4 |
+| 2.7 | 1.7.2 |
+| 3.1.2 | 3.1.1 |
+| 3.1.3 | 3.1.1 |
 
 ---
 
-## 🧭 Suggested Task Order (Based on Dependencies)
+## 🧭 Suggested Order of Execution
 
-1.1 → 1.2 → 1.3 → 1.4 → 1.5 → 1.6 → 1.7  
-2.1 → 2.2 → 2.3 → 2.4  
-3.1 → 3.2  
-3.3  
-4.1 → 4.2 → 4.3  
-4.4  
-5.1 → 5.2  
-5.3 (optional)
+```
+1.1 → 1.2 → 1.3  
+→ 1.4.1 → 1.4.2 → 1.4.3 → 1.4.4  
+→ 1.5.1 → 1.5.2 → 1.5.3  
+→ 1.6  
+→ 1.7.1 → 1.7.2 → 1.7.3  
+→ 2.1 → 2.2 → 2.3  
+→ 2.4.1 → 2.4.2 → 2.4.3  
+→ 2.5.1 → 2.5.2 → 2.5.3 → 2.5.4  
+→ 2.6 → 2.7  
+→ 3.1.1 → 3.1.2 → 3.1.3  
+→ 3.2
+```
 
 ---
 
-## 📝 Notes
+## 📌 Notes
 
-- Keys must follow format: `ENV_<API>_KEY1`, `ENV_<API>_KEY2`, ...
-- Initial scope targets ElevenLabs integration. GPT can follow after.
-- Consider exporting `debugState(apiName)` for local logging of rotation status.
+- The mock server should **only run in test environments**.
+- Test coverage should include:
+  - Rotation
+  - Exhaustion
+  - Retry after failure
+  - Isolation across multiple API names
+- Keep mock keys like `ENV_FAKEAPI_KEY1` in `.env.test.local` or injected directly in tests.

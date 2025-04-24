@@ -1,0 +1,19 @@
+{
+  "name": "key-cycler",
+  "version": "1.0.0",
+  "description": "Key Cycler is a TypeScript utility package designed to help you efficiently manage and cycle through multiple API keys for services with restrictive or expensive rate limits. It enables you to seamlessly rotate keys when making requests to APIs, helping you maximize usage within free or low-cost tiers.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.2"
+  }
+}

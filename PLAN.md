@@ -32,10 +32,10 @@ This enables internal key cycling, retry logic, and automatic exhaustion trackin
 
 | ✅ | Subtask | Description |
 |----|---------|-------------|
-| [ ] | 2.1 | Modify `lib/elevenlabs.js` to `import { getKey, markKeyAsFailed }` |
-| [ ] | 2.2 | Replace `process.env.ELEVENLABS_API_KEY` with `await getKey("elevenlabs")` |
-| [ ] | 2.3 | Catch `429` errors and call `markKeyAsFailed("elevenlabs", key)` |
-| [ ] | 2.4 | Ensure the function signature of `textToSpeech()` remains unchanged |
+| [x] | 2.1 | Modify `lib/elevenlabs.js` to `import { getKey, markKeyAsFailed }` |
+| [x] | 2.2 | Replace `process.env.ELEVENLABS_API_KEY` with `await getKey("elevenlabs")` |
+| [x] | 2.3 | Catch `429` errors and call `markKeyAsFailed("elevenlabs", key)` |
+| [x] | 2.4 | Ensure the function signature of `textToSpeech()` remains unchanged |
 
 ---
 

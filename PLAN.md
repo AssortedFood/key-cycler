@@ -10,7 +10,7 @@ Create a mock API to test the key-cycler utility with fake API keys, simulating 
 
 | ✅ | Subtask | Description |
 |----|---------|-------------|
-| [ ] | 1.1 | Create file: `mock/fakeApiServer.ts` |
+| [x] | 1.1 | Create file: `mock/fakeApiServer.ts` |
 | [ ] | 1.2 | Set up Express app with one route: `POST /speak` |
 | [ ] | 1.3 | Accept header `xi-api-key` and simulate a JSON payload |
 | [ ] | 1.4.1 | Create an in-memory `Map<string, number>` to track key usage |

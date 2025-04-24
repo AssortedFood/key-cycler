@@ -56,7 +56,7 @@ This enables internal key cycling, retry logic, and automatic exhaustion trackin
 | [ ] | 4.1 | Create a test file: `tests/lib/keyCycler.test.ts` |
 | [ ] | 4.2 | Write tests for `getKey()` rotation logic |
 | [ ] | 4.3 | Write tests for `markKeyAsFailed()` effect |
-| [ ] | 4.4 | Add test for ElevenLabs using mocked `getKey()` logic |
+| [x] | 4.4 | Add test for ElevenLabs using mocked `getKey()` logic |
 | [ ] | 4.5 | (Optional) Add `debugState(apiName)` export for internal state logging |
 
 ---

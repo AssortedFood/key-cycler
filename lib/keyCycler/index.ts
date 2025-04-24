@@ -1,9 +1,16 @@
+const DEBUG_LOG = process.env.KEY_CYCLER_DEBUG === 'true';
 type KeyUsage = { [key: string]: number }
 
 interface CyclerState {
   keys: string[]
   index: number
   usage: KeyUsage
+}
+
+function debugLog(message: string) {
+  if (DEBUG_LOG) {
+    console.log('[KeyCycler]', message);
+  }
 }
 
 const RATE_LIMIT = 5
@@ -25,6 +32,7 @@ export async function getKey(apiName: string): Promise<string> {
     if (keys.length === 0) {
       throw new Error(`No keys found for ${apiName}`)
     }
+debugLog(`Loading keys from env for api ${apiName}. Found keys: ${keys.join(', ')}`);
 
     state = {
       keys,
@@ -56,6 +64,7 @@ export function markKeyAsFailed(apiName: string, key: string) {
   if (state && key in state.usage) {
     state.usage[key] = RATE_LIMIT
   }
+debugLog(`Cycler state for ${apiName}: index=${state.index}, usage=${JSON.stringify(state.usage)}`);
 }
 
 // Internal helper for testing

@@ -22,3 +22,15 @@ const fakeKeys = loadFakeApiKeys();
 
 // Example usage to verify keys loaded
 console.log('Loaded fake API keys:', fakeKeys);
+
+import { startMockServer, stopMockServer } from '../../mock/fakeApiServer';
+
+let server;
+
+beforeAll(async () => {
+  server = await startMockServer(4000);
+});
+
+afterAll(async () => {
+  await stopMockServer();
+});

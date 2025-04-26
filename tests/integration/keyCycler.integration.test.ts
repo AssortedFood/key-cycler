@@ -34,3 +34,35 @@ beforeAll(async () => {
 afterAll(async () => {
   await stopMockServer();
 });
+
+import axios from 'axios';
+
+const BASE_URL = 'http://localhost:4000';
+const RATE_LIMIT = 5;
+
+describe('POST /speak rate limit handling', () => {
+  it('should return 200 until rate limit exceeded and then 429', async () => {
+    for (const key of fakeKeys) {
+      for (let i = 1; i <= RATE_LIMIT; i++) {
+        const response = await axios.post(
+          BASE_URL + '/speak',
+          { text: 'Hello' },
+          { headers: { 'xi-api-key': key } }
+        );
+        expect(response.status).toBe(200);
+      }
+
+      // Next request should be rate limited
+      try {
+        await axios.post(BASE_URL + '/speak', { text: 'Hello' }, { headers: { 'xi-api-key': key } });
+        throw new Error('Expected 429 but did not get');
+      } catch (err) {
+        if (axios.isAxiosError(err) && err.response) {
+          expect(err.response.status).toBe(429);
+        } else {
+          throw err;
+        }
+      }
+    }
+  });
+});

@@ -66,3 +66,28 @@ describe('POST /speak rate limit handling', () => {
     }
   });
 });
+
+describe('Key cycler full exhaustion behavior', () => {
+  it('should handle all keys exhausted after repeated calls', async () => {
+    for (const key of fakeKeys) {
+      for (let i = 1; i <= 5; i++) {
+        // Fill each key usage to rate limit
+        await axios.post('http://localhost:4000/speak', { text: 'hello' }, { headers: { 'xi-api-key': key } });
+      }
+    }
+
+    // Now all keys should reject with 429
+    for (const key of fakeKeys) {
+      try {
+        await axios.post('http://localhost:4000/speak', { text: 'hello' }, { headers: { 'xi-api-key': key } });
+        throw new Error('Expected 429 but did not get');
+      } catch (err) {
+        if (axios.isAxiosError(err) && err.response) {
+          expect(err.response.status).toBe(429);
+        } else {
+          throw err;
+        }
+      }
+    }
+  });
+});

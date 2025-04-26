@@ -1,105 +1,109 @@
-# PLAN.md
+PLAN.md
 
-## 🧪 Objective
+🎯 Objective
 
-Create a mock API to test the key-cycler utility with fake API keys, simulating rate limiting behaviour (`429 Too Many Requests`) and verifying that `getKey` and `markKeyAsFailed` behave correctly without needing access to a real API (like ElevenLabs).
+Enable an AI-driven workflow that systematically executes and tracks every task and subtask needed to fully implement, test, and maintain the Key Cycler utility, with clear iteration steps, progress markers, and automatic Git commits for each completed item.
 
----
-
-## 🧱 Step 1: Build the Mock API
-
-| ✅ | Subtask | Description |
-|----|---------|-------------|
-| [x] | 1.1 | Create file: `mock/fakeApiServer.ts` |
-| [x] | 1.2 | Set up Express app with one route: `POST /speak` |
-| [x] | 1.3 | Accept header `xi-api-key` and simulate a JSON payload |
-| [x] | 1.4.1 | Create an in-memory `Map<string, number>` to track key usage |
-| [x] | 1.4.2 | Increment the count for `xi-api-key` on each request |
-| [x] | 1.4.3 | Create helper `resetKeyUsage()` to clear internal usage state |
-| [x] | 1.4.4 | Export usage map if needed for debug assertions |
-| [x] | 1.5.1 | Define a rate limit threshold (e.g., `RATE_LIMIT = 5`) |
-| [x] | 1.5.2 | If usage exceeds `RATE_LIMIT`, return `429 Too Many Requests` |
-| [x] | 1.5.3 | Otherwise return a dummy success payload (e.g. `{ audio: "fake_data" }`) |
-| [x] | 1.6 | Return 400 or 401 on missing/malformed headers for robustness |
-| [x] | 1.7.1 | Implement `startMockServer(port): Promise<Server>` |
-| [x] | 1.7.2 | Implement `stopMockServer(server): Promise<void>` |
-| [x] | 1.7.3 | Ensure compatibility with Vitest lifecycle (`beforeAll` / `afterAll`) |
 
 ---
 
-## 🧪 Step 2: Write Integration Tests with Mock API
+📋 Task List
 
-| ✅ | Subtask | Description |
-|----|---------|-------------|
-| [x] | 2.1 | Create test file `tests/integration/keyCycler.integration.test.ts` |
-| [x] | 2.2 | Load fake env keys (`ENV_FAKEAPI_KEY1`, `KEY2`, `KEY3`, etc.) |
-| [ ] | 2.3 | Test: basic call to `/speak` uses a valid key and returns 200 |
-| [x] | 2.4.1 | Set up env with 2–3 fake keys |
-| [x] | 2.4.2 | Call `/speak` repeatedly until all keys are exhausted |
-| [x] | 2.4.3 | Expect 429 or final fallback to throw from `getKey()` |
-| [x] | 2.5.1 | Simulate 429 for a specific key in server logic |
-| [x] | 2.5.2 | Call `markKeyAsFailed("fakeapi", key)` in response |
-| [x] | 2.5.3 | Expect next call to `getKey("fakeapi")` to yield a new key |
-| [x] | 2.5.4 | Optionally simulate retry logic at app level |
-| [x] | 2.6 | Assert key usage map reflects accurate usage totals |
-| [x] | 2.7 | Confirm server shuts down cleanly after test runs |
+Each top-level task is numbered. Subtasks are lettered and can be tracked as the AI progresses. Every completed subtask triggers a Git commit.
+
+1. Build the Mock API
+
+[ ] 1.a Define Express app skeleton (mock/fakeApiServer.ts).
+
+[ ] 1.b Implement POST /speak route accepting xi-api-key header.
+
+[ ] 1.c Create in-memory usage map and resetKeyUsage() helper.
+
+[ ] 1.d Enforce rate limit (RATE_LIMIT = 5), return 429 on exceed.
+
+[ ] 1.e Return dummy success payload when under limit.
+
+[ ] 1.f Handle missing/malformed headers (400/401 responses).
+
+[ ] 1.g Implement startMockServer(port) and stopMockServer(server).
+
+
+
+2. Write Integration Tests
+
+[ ] 2.a Configure Vitest suite in tests/integration/keyCycler.integration.test.ts.
+
+[ ] 2.b Load fake env keys (ENV_FAKEAPI_KEY1…N).
+
+[ ] 2.c Start mock server (beforeAll), stop in afterAll.
+
+[ ] 2.d Perform repeated POST /speak calls to exercise rate limits.
+
+[ ] 2.e Assert 200 responses until limit, then 429.
+
+[ ] 2.f On 429, call markKeyAsFailed() and retry with new key.
+
+[ ] 2.g Verify final exhaustion behavior throws.
+
+
+
+3. Enhance KeyCycler Debug Support
+
+[ ] 3.a Expose internal state via debugState(apiName) in test builds.
+
+[ ] 3.b Ensure debugState is read-only or returns a clone.
+
+[ ] 3.c Import/export cleanup: surface debugState in public API.
+
+
+
+4. Clean Up Source Structure
+
+[ ] 4.a Consolidate public exports in src/KeyCycler.ts (or remove if unused).
+
+[ ] 4.b Ensure lib/keyCycler/index.ts and src/KeyCycler.ts align as single entrypoint.
+
+
+
+5. Documentation Updates
+
+[ ] 5.a Update README.md with integration example snippet.
+
+[ ] 5.b Revise NAMING.md with any learned best practices.
+
+
+
+
 
 ---
 
-## 🧩 Step 3: Enhance KeyCycler for Test Support
+🔄 AI Iteration Workflow
 
-| ✅ | Subtask | Description |
-|----|---------|-------------|
-| [ ] | 3.1.1 | Add `debugState(apiName)` to return internal key usage state |
-| [ ] | 3.1.2 | Ensure it's typed defensively (read-only or cloned) |
-| [ ] | 3.1.3 | Export `debugState` only for testing/debug builds |
-| [ ] | 3.2 | (Optional) Add logging for key cycling for local inspection |
+1. Load this plan and parse the numbered tasks.
 
----
 
-## 🔁 Dependencies
+2. For each top-level task:
 
-| Subtask | Depends On |
-|---------|------------|
-| 1.5.2 | 1.4.1, 1.5.1 |
-| 1.5.3 | 1.5.2 |
-| 2.2 | 1.7.1 |
-| 2.3 | 1.2, 1.3 |
-| 2.4.2 | 1.5.2 |
-| 2.4.3 | 2.4.2 |
-| 2.5.2 | 2.5.1 |
-| 2.5.3 | 2.5.2 |
-| 2.6 | 1.4.4 |
-| 2.7 | 1.7.2 |
-| 3.1.2 | 3.1.1 |
-| 3.1.3 | 3.1.1 |
+Locate the first unchecked subtask.
 
----
+Execute that subtask:
 
-## 🧭 Suggested Order of Execution
+Generate code, tests, or documentation as needed.
 
-```
-1.1 → 1.2 → 1.3  
-→ 1.4.1 → 1.4.2 → 1.4.3 → 1.4.4  
-→ 1.5.1 → 1.5.2 → 1.5.3  
-→ 1.6  
-→ 1.7.1 → 1.7.2 → 1.7.3  
-→ 2.1 → 2.2 → 2.3  
-→ 2.4.1 → 2.4.2 → 2.4.3  
-→ 2.5.1 → 2.5.2 → 2.5.3 → 2.5.4  
-→ 2.6 → 2.7  
-→ 3.1.1 → 3.1.2 → 3.1.3  
-→ 3.2
-```
+Mark the subtask with ✅ in PLAN.md.
 
----
+Create a Git commit with a descriptive message matching the subtask title (e.g., "Implement mock POST /speak route").
 
-## 📌 Notes
 
-- The mock server should **only run in test environments**.
-- Test coverage should include:
-  - Rotation
-  - Exhaustion
-  - Retry after failure
-  - Isolation across multiple API names
-- Keep mock keys like `ENV_FAKEAPI_KEY1` in `.env.test.local` or injected directly in tests.
+
+
+3. Run automated tests (unit and integration) to validate changes.
+
+
+4. Proceed to the next unchecked subtask. If all subtasks under a task are done, move to the next task.
+
+
+5. Loop until every checkbox is ✅.
+
+
+6. Report a summary of completed tasks and open items.

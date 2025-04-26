@@ -15,3 +15,10 @@ describe('Key Cycler integration tests', () => {
     expect(true).toBe(true);
   });
 });
+
+import { loadFakeApiKeys } from './loadFakeKeys';
+
+const fakeKeys = loadFakeApiKeys();
+
+// Example usage to verify keys loaded
+console.log('Loaded fake API keys:', fakeKeys);

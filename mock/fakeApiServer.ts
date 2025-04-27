@@ -3,6 +3,12 @@ import express from 'express';
 const app = express();
 app.use(express.json());
 
+// Simple route for /speak: accepts xi-api-key header and returns 200 OK
+app.post('/speak', (req, res) => {
+  const apiKey = req.header('xi-api-key');
+  res.sendStatus(200);
+});
+
 let server;
 
 export function startMockServer(port = 3000) {

@@ -1,40 +1,79 @@
-# 📋 Task List
+# 📋 Remaining Task List
 
-Each top-level task is numbered. Subtasks are lettered and are tracked individually. Every completed subtask must trigger a Git commit.
+These subtasks capture every remaining step before publishing **key-cycler** v0.1.0.
 
-1. Finalize the Mock API
+---
 
-[x] 1.a Define Express app skeleton (mock/fakeApiServer.ts).  
-[x] 1.b Implement POST /speak route accepting xi-api-key header.  
-[x] 1.c Create in-memory usage map and resetKeyUsage() helper.  
-[x] 1.d Enforce rate limit (RATE_LIMIT = 5), return 429 on exceed.  
-[x] 1.e Return dummy success payload when under limit.  
-[x] 1.f Handle missing/malformed headers (400/401 responses).  
-[x] 1.g Implement startMockServer(port) and stopMockServer(server).
+## 1. Documentation Updates
 
-2. Complete Integration Tests
+[ ] **1.a** Add an “Integration Test” usage example to **README.md**, pointing at `tests/integration/keyCycler.test.ts`.  
+[ ] **1.b** Revise **NAMING.md** if any environment-variable or file-naming conventions have changed or need clarification.  
 
-[x] 2.a Populate tests/integration/keyCycler.integration.test.ts.  
-[x] 2.b Load fake environment keys (ENV_FAKEAPI_KEY1…N).  
-[x] 2.c Start mock server in beforeAll, stop in afterAll.  
-[x] 2.d Perform repeated POST /speak calls to simulate rate limits.  
-[x] 2.e Assert 200 responses until rate limit exceeded.  
-[x] 2.f On 429, call markKeyAsFailed() and verify key rotation.  
-[x] 2.g Verify behavior when all keys are exhausted.
+---
 
-3. Consolidate Public API
+## 2. Package Publication (v0)
 
-[x] 3.a Export getKey, markKeyAsFailed, and debugState from src/index.ts.  
-[x] 3.b Ensure clean imports from lib/keyCycler/index.ts.
-[x] 3.c Add unit tests for debugState (verify pointer, usage and failed flags).
+### 2.a Update **package.json** metadata  
+[ ] **2.a.1** Bump `"version"` to `0.1.0`.  
+[ ] **2.a.2** Point `"main"` → `dist/index.js`, `"module"` → `dist/index.esm.js`, `"types"` → `dist/index.d.ts`.  
+[ ] **2.a.3** Add `"files": ["dist"]`.  
+[ ] **2.a.4** Populate a `"keywords"` array (e.g. `["api","key","rotation","rate-limit"]`).  
+[ ] **2.a.5** Ensure `"repository"` and `"licence"` fields are correct.  
 
-4. Enhance Debug Support
+### 2.b Update **tsconfig.json**  
+[ ] **2.b** Enable `"declaration": true` and set `"outDir": "dist"` so that `.js` and `.d.ts` files are emitted into `dist/`.  
 
-[x] 4.a Implement _debugState(apiName).  
-[x] 4.b Properly expose debugState only in test or debug mode.  
-[x] 4.c Verify debugState is read-only or cloned.
+### 2.c Add npm scripts to **package.json**  
+[ ] **2.c.1** Add `"build": "tsc"`.  
+[ ] **2.c.2** Add `"prepare": "npm run build"`.  
+[ ] **2.c.3** Verify `"test"` still runs Vitest.  
 
-5. Documentation Updates
+### 2.d Build and verify artifacts  
+[ ] **2.d** Run `npm run build` and confirm that `dist/` contains the compiled `.js` and `.d.ts` files.  
 
-[ ] 5.a Add an Integration Test usage example to README.md.  
-[x] 5.b Revise NAMING.md if necessary to match any new patterns.
+### 2.e Tag and publish  
+[ ] **2.e** Create Git tag `v0.1.0` and run `npm publish --access public` so the package is installable as `key-cycler@0.1.0`.  
+
+---
+
+## 3. Repository & Packaging Hygiene
+
+[ ] **3.a** Ensure a **LICENCE** file (MIT) exists in the repo root and that the `"licence"` field in `package.json` matches.  
+[ ] **3.b** Remove any `"private": true` from `package.json`.  
+[ ] **3.c** Add `/dist/` to **.gitignore** to prevent committing build artefacts.  
+
+---
+
+## 4. README & Documentation Polish
+
+[ ] **4.a** Add an **Installation** section to **README.md**, for example:
+```bash
+npm install key-cycler@0.1.0
+# or
+yarn add key-cycler@0.1.0
+```
+[ ] **4.b** Insert badges at the top of **README.md** for:
+- Licence  
+- Build/Test status  
+- npm version & download counts  
+
+---
+
+## 5. Code Quality
+
+### 5.a Add ESLint configuration  
+[ ] **5.a.1** Install ESLint (and TypeScript plugin) as dev-dependencies.  
+[ ] **5.a.2** Create an ESLint config file (`.eslintrc.js` or `.eslintrc.json`).  
+[ ] **5.a.3** Define or generate lint rules (e.g. via `npx eslint --init`).  
+[ ] **5.a.4** Verify ESLint loads and flags style issues.  
+
+### 5.b Create and verify `npm run lint`  
+[ ] **5.b.1** Add `"lint": "eslint 'src/**/*.ts' 'lib/**/*.ts' --max-warnings=0'"` to `package.json`.  
+[ ] **5.b.2** Run `npm run lint` and fix all violations.  
+[ ] **5.b.3** Confirm lint still passes after a fresh `npm install`.  
+
+### 5.c Integrate linting into workflow  
+[ ] **5.c.1** Choose and install a pre-commit hook manager (e.g. Husky).  
+[ ] **5.c.2** Configure a pre-commit hook to run `npm run lint`.  
+[ ] **5.c.3** Test that the hook blocks commits when lint errors are present.  
+[ ] **5.c.4** Document the hook setup/usage in your README or dev notes.  

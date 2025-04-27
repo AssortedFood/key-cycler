@@ -41,6 +41,10 @@ Currently, the core focus is on implementing efficient key rotation and retry lo
 - More SDK-specific helpers or plugins.
 - Improved environment variable formats or configuration methods.
 
+## Integration Testing
+
+See `tests/integration/keyCycler.integration.test.ts` for a sample integration test that starts the mock server, resets cycler state, and verifies key cycling under rate limits.
+
 ## License
 
 This project is open source. Please see the LICENSE file for details.

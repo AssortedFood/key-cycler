@@ -93,7 +93,8 @@ export function debugState(apiName: string) {
   }
   const cycler = cyclers.get(apiName);
   if (!cycler) return null;
-  return {
+  // Build a snapshot of current state
+  const snapshot = {
     pointer: cycler.pointer,
     keys: cycler.keys.map(k => ({
       value: k.value,
@@ -101,5 +102,10 @@ export function debugState(apiName: string) {
       failed: k.failed
     }))
   };
+  // Freeze each key object to prevent external mutation
+  snapshot.keys.forEach(Object.freeze);
+  // Freeze the keys array and the snapshot object
+  Object.freeze(snapshot.keys);
+  return Object.freeze(snapshot);
 }
   

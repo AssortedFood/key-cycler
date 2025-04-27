@@ -5,6 +5,8 @@ app.use(express.json());
 
 // In-memory usage map for /speak endpoint
 const keyUsage: Record<string, number> = {};
+// Per-key rate limit
+const RATE_LIMIT = 5;
 
 /**
  * Reset all key usage counts (for testing)
@@ -16,6 +18,11 @@ export function resetKeyUsage() {
 // Simple route for /speak: accepts xi-api-key header and returns 200 OK
 app.post('/speak', (req, res) => {
   const apiKey = req.header('xi-api-key');
+  const used = keyUsage[apiKey] || 0;
+  if (used >= RATE_LIMIT) {
+    return res.sendStatus(429);
+  }
+  keyUsage[apiKey] = used + 1;
   res.sendStatus(200);
 });
 

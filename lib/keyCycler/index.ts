@@ -86,16 +86,20 @@ type KeyState = {
   /**
    * Return a read-only snapshot of pointer, usage and failure flags.
    */
-  export function debugState(apiName: string) {
-    const cycler = cyclers.get(apiName);
-    if (!cycler) return null;
-    return {
-      pointer: cycler.pointer,
-      keys: cycler.keys.map(k => ({
-        value: k.value,
-        usage: k.usage,
-        failed: k.failed
-      }))
-    };
+export function debugState(apiName: string) {
+  // Only available in non-production (test or debug) environments
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('debugState is only available in test or debug mode');
   }
+  const cycler = cyclers.get(apiName);
+  if (!cycler) return null;
+  return {
+    pointer: cycler.pointer,
+    keys: cycler.keys.map(k => ({
+      value: k.value,
+      usage: k.usage,
+      failed: k.failed
+    }))
+  };
+}
   

@@ -35,6 +35,8 @@ describe('Integration: Key Cycler & Mock API', () => {
     const res = await axios.post(`${BASE_URL}/speak`, { text: 'Hello' }, { headers: { 'xi-api-key': key1 } }); expect(res.status).toBe(200);
   });
   it('errors after all keys are manually marked failed following server exhaustion', async () => {
+    // Initialize client cycler for marking failures
+    await getKey('fakeapi');
     for (const key of fakeKeys) {
       for (let i = 1; i <= RATE_LIMIT; i++) {
         await axios.post(`${BASE_URL}/speak`, { text: 'Hello' }, { headers: { 'xi-api-key': key } });

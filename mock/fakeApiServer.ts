@@ -23,7 +23,8 @@ app.post('/speak', (req, res) => {
     return res.sendStatus(429);
   }
   keyUsage[apiKey] = used + 1;
-  res.sendStatus(200);
+  // Under rate limit: return dummy success payload
+  return res.json({ text: req.body.text });
 });
 
 let server;

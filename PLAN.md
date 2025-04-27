@@ -32,7 +32,7 @@ Each top-level task is numbered. Subtasks are lettered and are tracked individua
 
 [x] 4.a Implement _debugState(apiName).  
 [x] 4.b Properly expose debugState only in test or debug mode.  
- [x] 4.c Verify debugState is read-only or cloned.
+[x] 4.c Verify debugState is read-only or cloned.
 
 5. Documentation Updates
 

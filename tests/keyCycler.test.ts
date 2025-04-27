@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { getKey, markKeyAsFailed, __resetCyclers__ } from '../lib/keyCycler/index'
+import { getKey, markKeyAsFailed, __resetCyclers__, debugState } from '../lib/keyCycler/index'
 
 // Helper to set environment variables
 function setEnv(keys: Record<string, string>) {
@@ -124,5 +124,28 @@ describe('KeyCycler', () => {
     expect(await getKey('apitwo')).toBe('b1')
     expect(await getKey('apione')).toBe('a2')
     expect(await getKey('apitwo')).toBe('b1')
+  })
+  
+  it('debugState returns correct pointer, usage and failed flags', async () => {
+    setEnv({
+      ENV_TESTAPI_KEY1: 'x',
+      ENV_TESTAPI_KEY2: 'y'
+    })
+    __resetCyclers__()
+    // Initialize and consume one key
+    const firstKey = await getKey('testapi')
+    expect(firstKey).toBe('x')
+    const state1 = debugState('testapi')
+    expect(state1).toEqual({
+      pointer: 1,
+      keys: [
+        { value: 'x', usage: 1, failed: false },
+        { value: 'y', usage: 0, failed: false }
+      ]
+    })
+    // Mark first key as failed
+    markKeyAsFailed('testapi', 'x')
+    const state2 = debugState('testapi')
+    expect(state2.keys[0].failed).toBe(true)
   })
 })

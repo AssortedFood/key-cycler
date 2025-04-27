@@ -26,7 +26,7 @@ Each top-level task is numbered. Subtasks are lettered and are tracked individua
 
 [x] 3.a Export getKey, markKeyAsFailed, and debugState from src/index.ts.  
 [x] 3.b Ensure clean imports from lib/keyCycler/index.ts.
-[ ] 3.c Add unit tests for debugState (verify pointer, usage and failed flags).
+[x] 3.c Add unit tests for debugState (verify pointer, usage and failed flags).
 
 4. Enhance Debug Support
 

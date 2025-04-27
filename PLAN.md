@@ -5,7 +5,7 @@ Each top-level task is numbered. Subtasks are lettered and are tracked individua
 1. Finalize the Mock API
 
 [x] 1.a Define Express app skeleton (mock/fakeApiServer.ts).  
-[ ] 1.b Implement POST /speak route accepting xi-api-key header.  
+[x] 1.b Implement POST /speak route accepting xi-api-key header.  
 [ ] 1.c Create in-memory usage map and resetKeyUsage() helper.  
 [ ] 1.d Enforce rate limit (RATE_LIMIT = 5), return 429 on exceed.  
 [ ] 1.e Return dummy success payload when under limit.  

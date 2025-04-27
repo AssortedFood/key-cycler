@@ -20,7 +20,7 @@ Each top-level task is numbered. Subtasks are lettered and are tracked individua
 [x] 2.d Perform repeated POST /speak calls to simulate rate limits.  
 [x] 2.e Assert 200 responses until rate limit exceeded.  
 [x] 2.f On 429, call markKeyAsFailed() and verify key rotation.  
-[ ] 2.g Verify behavior when all keys are exhausted.
+[x] 2.g Verify behavior when all keys are exhausted.
 
 3. Consolidate Public API
 

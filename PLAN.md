@@ -37,4 +37,4 @@ Each top-level task is numbered. Subtasks are lettered and are tracked individua
 5. Documentation Updates
 
 [ ] 5.a Add an Integration Test usage example to README.md.  
-[ ] 5.b Revise NAMING.md if necessary to match any new patterns.
+[x] 5.b Revise NAMING.md if necessary to match any new patterns.

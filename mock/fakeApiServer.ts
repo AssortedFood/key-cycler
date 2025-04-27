@@ -18,6 +18,10 @@ export function resetKeyUsage() {
 // Simple route for /speak: accepts xi-api-key header and returns 200 OK
 app.post('/speak', (req, res) => {
   const apiKey = req.header('xi-api-key');
+  // Missing API key header
+  if (!apiKey) {
+    return res.sendStatus(400);
+  }
   const used = keyUsage[apiKey] || 0;
   if (used >= RATE_LIMIT) {
     return res.sendStatus(429);

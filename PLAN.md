@@ -10,7 +10,7 @@ Each top-level task is numbered. Subtasks are lettered and are tracked individua
 [x] 1.d Enforce rate limit (RATE_LIMIT = 5), return 429 on exceed.  
 [x] 1.e Return dummy success payload when under limit.  
 [x] 1.f Handle missing/malformed headers (400/401 responses).  
-[ ] 1.g Implement startMockServer(port) and stopMockServer(server).
+[x] 1.g Implement startMockServer(port) and stopMockServer(server).
 
 2. Complete Integration Tests
 

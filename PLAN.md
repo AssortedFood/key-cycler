@@ -24,7 +24,7 @@ These subtasks capture every remaining step before publishing **key-cycler** v0.
 
 ### 2.c Add npm scripts to **package.json**  
 [x] **2.c.1** Add `"build": "tsc"`.  
-[ ] **2.c.2** Add `"prepare": "npm run build"`.  
+[x] **2.c.2** Add `"prepare": "npm run build"`.  
 [ ] **2.c.3** Verify `"test"` still runs Vitest.  
 
 ### 2.d Build and verify artifacts  

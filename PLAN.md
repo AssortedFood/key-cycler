@@ -27,7 +27,7 @@ These subtasks outline the steps needed to bring all Vitest tests back to passin
 
 ## 5. Run and validate
 - [ ] Run `npm test` and confirm all unit and integration tests pass.
-- [ ] Commit the updated tests and updated `PLAN.md` with message:
+- [x] Commit the updated tests and updated `PLAN.md` with message:
       "🔨 Complete test-fix PLAN and refactor tests"
 
 ## 6. Enhance integration server behavior

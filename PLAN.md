@@ -37,7 +37,7 @@ These subtasks capture every remaining step before publishing **key-cycler** v0.
 
 ## 3. Repository & Packaging Hygiene
 
-[ ] **3.a** Ensure a **LICENCE** file (MIT) exists in the repo root and that the `"licence"` field in `package.json` matches.  
+[x] **3.a** Ensure a **LICENCE** file (MIT) exists in the repo root and that the `"licence"` field in `package.json` matches.  
 [ ] **3.b** Remove any `"private": true` from `package.json`.  
 [ ] **3.c** Add `/dist/` to **.gitignore** to prevent committing build artefacts.  
 

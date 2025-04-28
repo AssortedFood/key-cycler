@@ -10,7 +10,7 @@ These subtasks outline the steps needed to bring all Vitest tests back to passin
 - [ ] Update integration tests in `tests/integration/keyCycler.test.ts` to match the same error text.
 
 ## 2. Remove in-memory RATE_LIMIT tests
-- [ ] In `tests/keyCycler.test.ts`, remove or refactor the “respects rate limits and skips exhausted keys” test so it verifies pure round-robin cycling without a usage cap.
+- [x] In `tests/keyCycler.test.ts`, remove or refactor the “respects rate limits and skips exhausted keys” test so it verifies pure round-robin cycling without a usage cap.
 - [ ] In that same file, remove the 5-iteration exhaustion loop and related assertions that depend on a hard limit of 5 uses per key.
 
 ## 3. Simplify markKeyAsFailed tests

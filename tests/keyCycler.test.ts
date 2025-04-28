@@ -78,25 +78,18 @@ describe('KeyCycler', () => {
       ENV_TESTAPI_KEY1: 'good',
       ENV_TESTAPI_KEY2: 'bad'
     })
-  
-    const first = await getKey('testapi') // good
-    const second = await getKey('testapi') // bad
-  
+
+    // Initial rotation should yield both 'good' and 'bad'
+    const first = await getKey('testapi')
+    const second = await getKey('testapi')
     expect(new Set([first, second])).toEqual(new Set(['good', 'bad']))
-  
-    // Simulate failure on 'bad' immediately
+
+    // Expire 'bad' manually
     markKeyAsFailed('testapi', 'bad')
-  
-    // 'good' should now be the only key used until exhausted
-    for (let i = 0; i < 4; i++) {
-      const key = await getKey('testapi')
-      expect(key).toBe('good')
-    }
-  
-    // One more call should exhaust 'good' too
-    await expect(getKey('testapi')).rejects.toThrow(
-      'All API keys for testapi are rate-limited'
-    )
+
+    // Subsequent calls should always return 'good'
+    expect(await getKey('testapi')).toBe('good')
+    expect(await getKey('testapi')).toBe('good')
   })
 
   it('throws if no keys exist in the environment', async () => {

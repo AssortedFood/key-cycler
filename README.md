@@ -47,9 +47,13 @@ At this stage, the usage is generic and can be integrated easily with any SDK or
 
 Currently, the core focus is on implementing efficient key rotation and retry logic. Future expansions may include:
 
-- Advanced rate limit detection.
-- More SDK-specific helpers or plugins.
-- Improved environment variable formats or configuration methods.
+  - Advanced rate limit detection.
+  - More SDK-specific helpers or plugins.
+  - Improved environment variable formats or configuration methods.
+
+### Pre-commit Hook
+
+A Git pre-commit hook is configured using Husky to run `npm run lint` before each commit. If lint errors are found, the commit will be blocked. Hooks are installed automatically when running `npm install` via the `prepare` script in `package.json`.
 
 ## Integration Testing
 

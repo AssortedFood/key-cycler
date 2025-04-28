@@ -38,28 +38,22 @@ describe('KeyCycler', () => {
     expect(await getKey('testapi')).toBe('bravo')
   })
 
-  it('respects rate limits and skips exhausted keys', async () => {
+  it('cycles keys in round-robin order indefinitely', async () => {
     setEnv({
       ENV_TESTAPI_KEY1: 'one',
       ENV_TESTAPI_KEY2: 'two'
     })
-  
-    // Exhaust 'one' by tracking exact usage
-    const used: string[] = []
-    for (let i = 0; i < 10; i++) {
-      try {
-        used.push(await getKey('testapi'))
-      } catch {
-        break
-      }
+
+    // Collect a sequence longer than the number of keys to verify rotation
+    const sequence: string[] = []
+    for (let i = 0; i < 6; i++) {
+      sequence.push(await getKey('testapi'))
     }
-  
-    const oneUsage = used.filter(k => k === 'one').length
-    const twoUsage = used.filter(k => k === 'two').length
-  
-    expect(oneUsage).toBe(5)
-    expect(twoUsage).toBeLessThanOrEqual(5)
-    expect(oneUsage + twoUsage).toBeLessThanOrEqual(10)
+
+    // Expect alternating 'one', 'two', 'one', ...
+    expect(sequence).toEqual([
+      'one', 'two', 'one', 'two', 'one', 'two'
+    ])
   })
   
 

@@ -45,7 +45,7 @@ These subtasks capture every remaining step before publishing **key-cycler** v0.
 
 ## 4. README & Documentation Polish
 
-[ ] **4.a** Add an **Installation** section to **README.md**, for example:
+[x] **4.a** Add an **Installation** section to **README.md**, for example:
 ```bash
 npm install key-cycler@0.1.0
 # or

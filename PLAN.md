@@ -31,13 +31,37 @@ These subtasks outline the steps needed to bring all Vitest tests back to passin
       "🔨 Complete test-fix PLAN and refactor tests"
 
 ## 6. Enhance integration server behavior
-- [ ] Extend `mock/fakeApiServer` to accept a custom per-key usage limit (e.g. via test setup or env var).
-- [ ] Update integration tests to configure the fake API with a small quota (e.g. 2 calls per key) and assert that after exceeding the quota the server returns 429 on that key.
-- [ ] In tests, verify that upon receiving a 429, the cycler calls `markKeyAsFailed` for that key and retries the request with the next key in sequence.
+- 6.a Extend `mock/fakeApiServer` to accept a custom per-key usage limit:
+  - [ ] 6.a.i Add a parameter or environment variable to configure the per-key quota in `startMockServer`.
+  - [ ] 6.a.ii In the server, track usage counts per API key and enforce the limit: after N requests respond 429.
+  - [ ] 6.a.iii Write a small smoke test to verify the server correctly returns 429 on the N+1th request.
+
+- 6.b Configure and verify integration tests use the custom limit:
+  - [ ] 6.b.i Update `tests/integration/keyCycler.test.ts` to start the mock server with a low quota (e.g. 2).
+  - [ ] 6.b.ii In the “automatically cycles…” test, assert that after the configured limit is reached, requests for that key produce a 429.
+
+- 6.c Assert cycler reacts to server 429 and rotates keys:
+  - [ ] 6.c.i In integration tests, upon receiving a 429 for one key, call `markKeyAsFailed` explicitly or via a wrapper.
+  - [ ] 6.c.ii Verify the next `getKey` returns the alternate key and that the request succeeds with status 200.
 
 ## 7. Plan for exhaustion-reset configuration
-- [ ] Define a `resetInterval` option (duration or cron schedule) for each provider when initializing a cycler.
-- [ ] Design or extend the cycler factory API to accept `resetInterval` and persist it per provider.
-- [ ] Add logic to clear `failed` states (and optionally usage counters) after the configured interval elapses.
-- [ ] Write unit tests that simulate time progression to confirm keys re-enter rotation after the reset interval.
-- [ ] Update documentation (README and OBJECTIVE.md) to explain exhaustion-reset behavior and how to configure it.
+- 7.a Define the reset interval concept and API:
+  - [ ] 7.a.i Determine acceptable interval formats (e.g. ISO duration string, cron expression, number of ms).
+  - [ ] 7.a.ii Add an optional `resetInterval` field to the cycler initialization/config object.
+
+- 7.b Extend cycler factory to accept configuration:
+  - [ ] 7.b.i Implement a factory function (e.g. `createCycler(apiName, options)`) that accepts `resetInterval`.
+  - [ ] 7.b.ii Ensure backward compatibility by defaulting to no reset when option omitted.
+
+- 7.c Implement periodic state reset:
+  - [ ] 7.c.i On each `getKey` call, check if `now >= lastReset + resetInterval`; if so, clear `failed` flags and reset usage counters.
+  - [ ] 7.c.ii Persist `lastReset` timestamp in the cycler state.
+
+- 7.d Write unit tests for reset logic:
+  - [ ] 7.d.i Use mocked timers to simulate clock advancing beyond `resetInterval`.
+  - [ ] 7.d.ii Confirm that after the interval expires, previously `failed` keys re-enter rotation.
+  - [ ] 7.d.iii Confirm that usage counters reset if desired by configuration.
+
+- 7.e Update documentation:
+  - [ ] 7.e.i Add `resetInterval` usage section to README.
+  - [ ] 7.e.ii Document new factory API in OBJECTIVE.md and usage examples.

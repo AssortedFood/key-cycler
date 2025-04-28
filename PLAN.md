@@ -15,7 +15,7 @@ These subtasks capture every remaining step before publishing **key-cycler** v0.
 
 [x] **2.a.1** Bump `"version"` to `0.1.0`.  
 [x] **2.a.2** Point `"main"` → `dist/index.js`, `"module"` → `dist/index.esm.js`, `"types"` → `dist/index.d.ts`.  
-[ ] **2.a.3** Add `"files": ["dist"]`.  
+[x] **2.a.3** Add `"files": ["dist"]`.  
 [ ] **2.a.4** Populate a `"keywords"` array (e.g. `["api","key","rotation","rate-limit"]`).  
 [ ] **2.a.5** Ensure `"repository"` and `"licence"` fields are correct.  
 

@@ -7,7 +7,7 @@ These subtasks capture every remaining step before publishing **key-cycler** v0.
 ## 1. Documentation Updates
 
 [x] **1.a** Add an “Integration Test” usage example to **README.md**, pointing at `tests/integration/keyCycler.test.ts`.  
-[ ] **1.b** Revise **NAMING.md** if any environment-variable or file-naming conventions have changed or need clarification.  
+[x] **1.b** Revise **NAMING.md** if any environment-variable or file-naming conventions have changed or need clarification.  
 
 ---
 

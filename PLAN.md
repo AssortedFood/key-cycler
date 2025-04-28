@@ -74,5 +74,5 @@ yarn add key-cycler@0.1.0
 ### 5.c Integrate linting into workflow  
 [x] **5.c.1** Choose and install a pre-commit hook manager (e.g. Husky).  
 [x] **5.c.2** Configure a pre-commit hook to run `npm run lint`.  
-[ ] **5.c.3** Test that the hook blocks commits when lint errors are present.  
+[x] **5.c.3** Test that the hook blocks commits when lint errors are present.  
 [ ] **5.c.4** Document the hook setup/usage in your README or dev notes.  

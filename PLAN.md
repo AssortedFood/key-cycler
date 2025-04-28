@@ -6,7 +6,7 @@ These subtasks outline the steps needed to bring all Vitest tests back to passin
 
 ## 1. Align error messages
 - [x] Decide on canonical error text (rate-limited per OBJECTIVE.md).
-- [ ] Update unit tests in `tests/keyCycler.test.ts` to expect the chosen text in both exhaustion and manual-failure cases.
+- [x] Update unit tests in `tests/keyCycler.test.ts` to expect the chosen text in both exhaustion and manual-failure cases.
 - [ ] Update integration tests in `tests/integration/keyCycler.test.ts` to match the same error text.
 
 ## 2. Remove in-memory RATE_LIMIT tests

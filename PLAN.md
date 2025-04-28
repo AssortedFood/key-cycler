@@ -61,7 +61,7 @@ yarn add key-cycler@0.1.0
 ## 5. Code Quality
 
 ### 5.a Add ESLint configuration  
-[ ] **5.a.1** Install ESLint (and TypeScript plugin) as dev-dependencies.  
+[x] **5.a.1** Install ESLint (and TypeScript plugin) as dev-dependencies.  
 [ ] **5.a.2** Create an ESLint config file (`.eslintrc.js` or `.eslintrc.json`).  
 [ ] **5.a.3** Define or generate lint rules (e.g. via `npx eslint --init`).  
 [ ] **5.a.4** Verify ESLint loads and flags style issues.  

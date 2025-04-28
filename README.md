@@ -1,6 +1,16 @@
 # Key Cycler
 
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE) [![Build Status](https://img.shields.io/github/actions/workflow/status/AssortedFood/key-cycler/ci.yml?branch=main)](https://github.com/AssortedFood/key-cycler/actions) [![npm version](https://img.shields.io/npm/v/key-cycler)](https://www.npmjs.com/package/key-cycler) [![Downloads](https://img.shields.io/npm/dm/key-cycler)](https://www.npmjs.com/package/key-cycler)
+
 Key Cycler is a TypeScript utility package designed to help you efficiently manage and cycle through multiple API keys for services with restrictive or expensive rate limits. It enables you to seamlessly rotate keys when making requests to APIs, helping you maximize usage within free or low-cost tiers.
+
+## Installation
+
+```bash
+npm install key-cycler@0.1.0
+# or
+yarn add key-cycler@0.1.0
+```
 
 ## Overview
 

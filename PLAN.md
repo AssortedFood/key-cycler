@@ -28,7 +28,7 @@ These subtasks capture every remaining step before publishing **key-cycler** v0.
 [x] **2.c.3** Verify `"test"` still runs Vitest.  
 
 ### 2.d Build and verify artifacts  
-[ ] **2.d** Run `npm run build` and confirm that `dist/` contains the compiled `.js` and `.d.ts` files.  
+[x] **2.d** Run `npm run build` and confirm that `dist/` contains the compiled `.js` and `.d.ts` files.  
 
 ### 2.e Tag and publish  
 [ ] **2.e** Create Git tag `v0.1.0` and run `npm publish --access public` so the package is installable as `key-cycler@0.1.0`.  

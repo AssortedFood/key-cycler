@@ -43,7 +43,42 @@ Currently, the core focus is on implementing efficient key rotation and retry lo
 
 ## Integration Testing
 
-See `tests/integration/keyCycler.integration.test.ts` for a sample integration test that starts the mock server, resets cycler state, and verifies key cycling under rate limits.
+See `tests/integration/keyCycler.test.ts` for a sample integration test that starts the mock server, resets cycler state, and verifies key cycling under rate limits.
+
+### Example
+
+A minimal integration test using Vitest, Axios, and the mock API server:
+
+```ts
+import { getKey, markKeyAsFailed, __resetCyclers__ } from 'key-cycler';
+import { startMockServer, stopMockServer, resetKeyUsage } from './mock/fakeApiServer';
+import axios from 'axios';
+import { loadFakeApiKeys } from './tests/integration/loadFakeApiKeys';
+
+let server: any;
+beforeAll(async () => {
+  resetKeyUsage();
+  __resetCyclers__();
+  server = await startMockServer(3000);
+});
+afterAll(async () => {
+  await stopMockServer();
+});
+
+describe('Integration: Key Cycler & Mock API', () => {
+  it('automatically cycles through all keys until exhaustion', async () => {
+    const fakeKeys = loadFakeApiKeys();
+    const key = await getKey('fakeapi');
+    const res = await axios.post('http://localhost:3000/speak', { text: 'Hello' }, {
+      headers: { 'xi-api-key': key },
+    });
+    expect(res.status).toBe(200);
+  });
+});
+
+```
+
+For a full example, see `tests/integration/keyCycler.test.ts`.
 
 ## License
 

@@ -14,7 +14,7 @@ These subtasks outline the steps needed to bring all Vitest tests back to passin
 - [x] In that same file, remove the 5-iteration exhaustion loop and related assertions that depend on a hard limit of 5 uses per key.
 
 ## 3. Simplify markKeyAsFailed tests
-- [ ] Update the “markKeyAsFailed manually expires a key early” unit test to:
+- [x] Update the “markKeyAsFailed manually expires a key early” unit test to:
   - Omit looping 5 times to exhaust keys; instead call `markKeyAsFailed` immediately after one access.
   - Assert that subsequent `getKey` calls always return the remaining key(s) in round-robin order until manually failed.
 

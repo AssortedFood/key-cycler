@@ -20,7 +20,7 @@ These subtasks capture every remaining step before publishing **key-cycler** v0.
 [x] **2.a.5** Ensure `"repository"` and `"licence"` fields are correct.  
 
 ### 2.b Update **tsconfig.json**  
-[ ] **2.b** Enable `"declaration": true` and set `"outDir": "dist"` so that `.js` and `.d.ts` files are emitted into `dist/`.  
+[x] **2.b** Enable `"declaration": true` and set `"outDir": "dist"` so that `.js` and `.d.ts` files are emitted into `dist/`.  
 
 ### 2.c Add npm scripts to **package.json**  
 [ ] **2.c.1** Add `"build": "tsc"`.  

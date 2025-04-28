@@ -11,7 +11,7 @@ type KeyState = {
     pointer: number;
   };
   
-  const RATE_LIMIT = 5;  // your per-key hard limit
+  // const RATE_LIMIT = 5;  // removed hard-coded per-key limit
   
   // In-memory store: one Cycler per API name
   const cyclers: Map<string, Cycler> = new Map();
@@ -56,14 +56,13 @@ type KeyState = {
   
       const state = keys[idx];
       if (state.failed) continue;
-      if (state.usage >= RATE_LIMIT) continue;
   
       // found a live key
       state.usage += 1;
       return state.value;
     }
   
-    throw new Error(`All API keys for ${apiName} are rate-limited`);
+    throw new Error(`All API keys for ${apiName} are exhausted`);
   }
   
   /**

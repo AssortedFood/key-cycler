@@ -69,7 +69,7 @@ yarn add key-cycler@0.1.0
 ### 5.b Create and verify `npm run lint`  
 [ ] **5.b.1** Add `"lint": "eslint 'src/**/*.ts' 'lib/**/*.ts' --max-warnings=0'"` to `package.json`.  
 [x] **5.b.2** Run `npm run lint` and fix all violations.  
-[ ] **5.b.3** Confirm lint still passes after a fresh `npm install`.  
+[x] **5.b.3** Confirm lint still passes after a fresh `npm install`.  
 
 ### 5.c Integrate linting into workflow  
 [ ] **5.c.1** Choose and install a pre-commit hook manager (e.g. Husky).  

@@ -1,78 +1,31 @@
-# 📋 Remaining Task List
+# 📋 Test-Fix Task List
 
-These subtasks capture every remaining step before publishing **key-cycler** v0.1.0.
-
----
-
-## 1. Documentation Updates
-
-[x] **1.a** Add an “Integration Test” usage example to **README.md**, pointing at `tests/integration/keyCycler.test.ts`.  
-[x] **1.b** Revise **NAMING.md** if any environment-variable or file-naming conventions have changed or need clarification.  
+These subtasks outline the steps needed to bring all Vitest tests back to passing under the updated round-robin cycling behavior (no hard-coded rate limits).
 
 ---
 
-## 2. Package Publication (v0)
+## 1. Align error messages
+- [ ] Decide on canonical error text (e.g. “exhausted” vs “rate-limited”).
+- [ ] Update unit tests in `tests/keyCycler.test.ts` to expect the chosen text in both exhaustion and manual-failure cases.
+- [ ] Update integration tests in `tests/integration/keyCycler.test.ts` to match the same error text.
 
-[x] **2.a.1** Bump `"version"` to `0.1.0`.  
-[x] **2.a.2** Point `"main"` → `dist/index.js`, `"module"` → `dist/index.esm.js`, `"types"` → `dist/index.d.ts`.  
-[x] **2.a.3** Add `"files": ["dist"]`.  
-[x] **2.a.4** Populate a `"keywords"` array (e.g. `["api","key","rotation","rate-limit"]`).  
-[x] **2.a.5** Ensure `"repository"` and `"licence"` fields are correct.  
+## 2. Remove in-memory RATE_LIMIT tests
+- [ ] In `tests/keyCycler.test.ts`, remove or refactor the “respects rate limits and skips exhausted keys” test so it verifies pure round-robin cycling without a usage cap.
+- [ ] In that same file, remove the 5-iteration exhaustion loop and related assertions that depend on a hard limit of 5 uses per key.
 
-### 2.b Update **tsconfig.json**  
-[x] **2.b** Enable `"declaration": true` and set `"outDir": "dist"` so that `.js` and `.d.ts` files are emitted into `dist/`.  
+## 3. Simplify markKeyAsFailed tests
+- [ ] Update the “markKeyAsFailed manually expires a key early” unit test to:
+  - Omit looping 5 times to exhaust keys; instead call `markKeyAsFailed` immediately after one access.
+  - Assert that subsequent `getKey` calls always return the remaining key(s) in round-robin order until manually failed.
 
-### 2.c Add npm scripts to **package.json**  
-[x] **2.c.1** Add `"build": "tsc"`.  
-[x] **2.c.2** Add `"prepare": "npm run build"`.  
-[x] **2.c.3** Verify `"test"` still runs Vitest.  
+## 4. Revise integration tests
+- [ ] Remove the `const RATE_LIMIT = 5;` import from `tests/integration/keyCycler.test.ts`.
+- [ ] For the “automatically cycles through all keys until exhaustion” test:
+  - Change the loop to run exactly `fakeKeys.length` iterations and verify each key is returned once in order.
+  - Drop the final `getKey`-throws error assertion (server-driven failures are handled via `markKeyAsFailed`).
+- [ ] For the manual-failure flow tests, update error-message expectations and ensure `markKeyAsFailed` is called on the right key after a 429 from the mock server.
 
-### 2.d Build and verify artifacts  
-[x] **2.d** Run `npm run build` and confirm that `dist/` contains the compiled `.js` and `.d.ts` files.  
-
-### 2.e Tag and publish  
-[x] **2.e** Create Git tag `v0.1.0` and run `npm publish --access public` so the package is installable as `key-cycler@0.1.0`.  
-
----
-
-## 3. Repository & Packaging Hygiene
-
-[x] **3.a** Ensure a **LICENCE** file (MIT) exists in the repo root and that the `"licence"` field in `package.json` matches.  
-[x] **3.b** Remove any `"private": true` from `package.json`.  
-[x] **3.c** Add `/dist/` to **.gitignore** to prevent committing build artefacts.  
-
----
-
-## 4. README & Documentation Polish
-
-[x] **4.a** Add an **Installation** section to **README.md**, for example:
-```bash
-npm install key-cycler@0.1.0
-# or
-yarn add key-cycler@0.1.0
-```
- [x] **4.b** Insert badges at the top of **README.md** for:
-- Licence  
-- Build/Test status  
-- npm version & download counts  
-
----
-
-## 5. Code Quality
-
-### 5.a Add ESLint configuration  
-[x] **5.a.1** Install ESLint (and TypeScript plugin) as dev-dependencies.  
-[x] **5.a.2** Create an ESLint config file (`.eslintrc.js` or `.eslintrc.json`).  
-[x] **5.a.3** Define or generate lint rules (e.g. via `npx eslint --init`).  
-[x] **5.a.4** Verify ESLint loads and flags style issues.  
-
-### 5.b Create and verify `npm run lint`  
-[x] **5.b.1** Add `"lint": "eslint 'src/**/*.ts' 'lib/**/*.ts' --max-warnings=0'"` to `package.json`.  
-[x] **5.b.2** Run `npm run lint` and fix all violations.  
-[x] **5.b.3** Confirm lint still passes after a fresh `npm install`.  
-
-### 5.c Integrate linting into workflow  
-[x] **5.c.1** Choose and install a pre-commit hook manager (e.g. Husky).  
-[x] **5.c.2** Configure a pre-commit hook to run `npm run lint`.  
-[x] **5.c.3** Test that the hook blocks commits when lint errors are present.  
-[x] **5.c.4** Document the hook setup/usage in your README or dev notes.  
+## 5. Run and validate
+- [ ] Run `npm test` and confirm all unit and integration tests pass.
+- [ ] Commit the updated tests and updated `PLAN.md` with message:
+      "🔨 Complete test-fix PLAN and refactor tests"

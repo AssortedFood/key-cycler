@@ -11,7 +11,7 @@ These subtasks outline the steps needed to bring all Vitest tests back to passin
 
 ## 2. Remove in-memory RATE_LIMIT tests
 - [x] In `tests/keyCycler.test.ts`, remove or refactor the “respects rate limits and skips exhausted keys” test so it verifies pure round-robin cycling without a usage cap.
-- [ ] In that same file, remove the 5-iteration exhaustion loop and related assertions that depend on a hard limit of 5 uses per key.
+- [x] In that same file, remove the 5-iteration exhaustion loop and related assertions that depend on a hard limit of 5 uses per key.
 
 ## 3. Simplify markKeyAsFailed tests
 - [ ] Update the “markKeyAsFailed manually expires a key early” unit test to:

@@ -29,3 +29,15 @@ These subtasks outline the steps needed to bring all Vitest tests back to passin
 - [ ] Run `npm test` and confirm all unit and integration tests pass.
 - [ ] Commit the updated tests and updated `PLAN.md` with message:
       "🔨 Complete test-fix PLAN and refactor tests"
+
+## 6. Enhance integration server behavior
+- [ ] Extend `mock/fakeApiServer` to accept a custom per-key usage limit (e.g. via test setup or env var).
+- [ ] Update integration tests to configure the fake API with a small quota (e.g. 2 calls per key) and assert that after exceeding the quota the server returns 429 on that key.
+- [ ] In tests, verify that upon receiving a 429, the cycler calls `markKeyAsFailed` for that key and retries the request with the next key in sequence.
+
+## 7. Plan for exhaustion-reset configuration
+- [ ] Define a `resetInterval` option (duration or cron schedule) for each provider when initializing a cycler.
+- [ ] Design or extend the cycler factory API to accept `resetInterval` and persist it per provider.
+- [ ] Add logic to clear `failed` states (and optionally usage counters) after the configured interval elapses.
+- [ ] Write unit tests that simulate time progression to confirm keys re-enter rotation after the reset interval.
+- [ ] Update documentation (README and OBJECTIVE.md) to explain exhaustion-reset behavior and how to configure it.

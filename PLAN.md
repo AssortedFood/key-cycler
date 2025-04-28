@@ -17,7 +17,7 @@ These subtasks capture every remaining step before publishing **key-cycler** v0.
 [x] **2.a.2** Point `"main"` → `dist/index.js`, `"module"` → `dist/index.esm.js`, `"types"` → `dist/index.d.ts`.  
 [x] **2.a.3** Add `"files": ["dist"]`.  
 [x] **2.a.4** Populate a `"keywords"` array (e.g. `["api","key","rotation","rate-limit"]`).  
-[ ] **2.a.5** Ensure `"repository"` and `"licence"` fields are correct.  
+[x] **2.a.5** Ensure `"repository"` and `"licence"` fields are correct.  
 
 ### 2.b Update **tsconfig.json**  
 [ ] **2.b** Enable `"declaration": true` and set `"outDir": "dist"` so that `.js` and `.d.ts` files are emitted into `dist/`.  

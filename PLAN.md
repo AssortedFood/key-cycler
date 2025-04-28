@@ -51,7 +51,7 @@ npm install key-cycler@0.1.0
 # or
 yarn add key-cycler@0.1.0
 ```
-[ ] **4.b** Insert badges at the top of **README.md** for:
+ [x] **4.b** Insert badges at the top of **README.md** for:
 - Licence  
 - Build/Test status  
 - npm version & download counts  

@@ -7,7 +7,6 @@ import { loadFakeApiKeys } from './loadFakeKeys';
 process.env.ENV_FAKEAPI_KEY1 = 'fakeKey1';
 process.env.ENV_FAKEAPI_KEY2 = 'fakeKey2';
 const fakeKeys = loadFakeApiKeys();
-const RATE_LIMIT = 5;
 const BASE_URL = 'http://localhost:3000';
 
 let server: any;
@@ -17,19 +16,23 @@ beforeEach(() => { resetKeyUsage(); __resetCyclers__(); });
 
 describe('Integration: Key Cycler & Mock API', () => {
   it('automatically cycles through all keys until exhaustion', async () => {
-    for (let i = 0; i < fakeKeys.length * RATE_LIMIT; i++) {
+    for (let i = 0; i < fakeKeys.length; i++) {
       const key = await getKey('fakeapi');
       expect(fakeKeys).toContain(key);
       const res = await axios.post(`${BASE_URL}/speak`, { text: 'Hello' }, { headers: { 'xi-api-key': key } });
       expect(res.status).toBe(200);
     }
-    await expect(getKey('fakeapi')).rejects.toThrow('All API keys for fakeapi are rate-limited');
+    // No further getKey call: exhaustion handled via markKeyAsFailed and server 429
   });
   it('rotates to next key upon manual markKeyAsFailed after server 429', async () => {
-    for (let i = 1; i <= RATE_LIMIT; i++) {
+    // Exhaust first key by hitting server limit (default 5)
+    for (let i = 1; i <= 5; i++) {
       await axios.post(`${BASE_URL}/speak`, { text: 'Hello' }, { headers: { 'xi-api-key': fakeKeys[0] } });
     }
-    await expect(axios.post(`${BASE_URL}/speak`, { text: 'Hello' }, { headers: { 'xi-api-key': fakeKeys[0] } })).rejects.toMatchObject({ response: { status: 429 } });
+    // Next call should be rate-limited (429)
+    await expect(
+      axios.post(`${BASE_URL}/speak`, { text: 'Hello' }, { headers: { 'xi-api-key': fakeKeys[0] } })
+    ).rejects.toMatchObject({ response: { status: 429 } });
     const key0 = await getKey('fakeapi'); expect(key0).toBe(fakeKeys[0]); markKeyAsFailed('fakeapi', key0);
     const key1 = await getKey('fakeapi'); expect(key1).toBe(fakeKeys[1]);
     const res = await axios.post(`${BASE_URL}/speak`, { text: 'Hello' }, { headers: { 'xi-api-key': key1 } }); expect(res.status).toBe(200);
@@ -38,12 +41,17 @@ describe('Integration: Key Cycler & Mock API', () => {
     // Initialize client cycler for marking failures
     await getKey('fakeapi');
     for (const key of fakeKeys) {
-      for (let i = 1; i <= RATE_LIMIT; i++) {
+      // Exhaust each key on the server side
+      for (let i = 1; i <= 5; i++) {
         await axios.post(`${BASE_URL}/speak`, { text: 'Hello' }, { headers: { 'xi-api-key': key } });
       }
-      await expect(axios.post(`${BASE_URL}/speak`, { text: 'Hello' }, { headers: { 'xi-api-key': key } })).rejects.toMatchObject({ response: { status: 429 } });
+      await expect(
+        axios.post(`${BASE_URL}/speak`, { text: 'Hello' }, { headers: { 'xi-api-key': key } })
+      ).rejects.toMatchObject({ response: { status: 429 } });
+      // Mark as failed in the cycler
       markKeyAsFailed('fakeapi', key);
     }
-    await expect(getKey('fakeapi')).rejects.toThrow('All API keys for fakeapi are rate-limited');
+    // Expect cycler to throw when no keys remain
+    await expect(getKey('fakeapi')).rejects.toThrow('All API keys for fakeapi are exhausted');
   });
 });

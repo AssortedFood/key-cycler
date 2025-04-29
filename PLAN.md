@@ -37,7 +37,7 @@ These subtasks outline the steps needed to bring all Vitest tests back to passin
   - [x] 6.a.iii Write a small smoke test to verify the server correctly returns 429 on the N+1th request.
 
 - 6.b Configure and verify integration tests use the custom limit:
-  - [ ] 6.b.i Update `tests/integration/keyCycler.test.ts` to start the mock server with a low quota (e.g. 2).
+  - [x] 6.b.i Update `tests/integration/keyCycler.test.ts` to start the mock server with a low quota (e.g. 2).
   - [ ] 6.b.ii In the “automatically cycles…” test, assert that after the configured limit is reached, requests for that key produce a 429.
 
 - 6.c Assert cycler reacts to server 429 and rotates keys:

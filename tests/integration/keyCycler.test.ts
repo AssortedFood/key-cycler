@@ -10,7 +10,7 @@ const fakeKeys = loadFakeApiKeys();
 const BASE_URL = 'http://localhost:3000';
 
 let server: any;
-beforeAll(async () => { resetKeyUsage(); __resetCyclers__(); server = await startMockServer(3000); });
+beforeAll(async () => { resetKeyUsage(); __resetCyclers__(); server = await startMockServer(3000, 2); });
 afterAll(async () => { await stopMockServer(); });
 beforeEach(() => { resetKeyUsage(); __resetCyclers__(); });
 

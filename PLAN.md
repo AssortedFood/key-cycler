@@ -41,8 +41,8 @@ These subtasks outline the steps needed to bring all Vitest tests back to passin
   - [x] 6.b.ii In the “automatically cycles…” test, assert that after the configured limit is reached, requests for that key produce a 429.
 
 - 6.c Assert cycler reacts to server 429 and rotates keys:
-  - [ ] 6.c.i In integration tests, upon receiving a 429 for one key, call `markKeyAsFailed` explicitly or via a wrapper.
-  - [ ] 6.c.ii Verify the next `getKey` returns the alternate key and that the request succeeds with status 200.
+  - [x] 6.c.i In integration tests, upon receiving a 429 for one key, call `markKeyAsFailed` explicitly or via a wrapper.
+  - [x] 6.c.ii Verify the next `getKey` returns the alternate key and that the request succeeds with status 200.
 
 ## 7. Plan for exhaustion-reset configuration
 - 7.a Define the reset interval concept and API:

@@ -39,13 +39,22 @@ describe('Integration: Key Cycler & Mock API', () => {
     ).rejects.toMatchObject({ response: { status: 429 } });
   });
   it('rotates to next key upon manual markKeyAsFailed after server 429', async () => {
-    // Exhaust first key by hitting server limit (default 5)
-    for (let i = 1; i <= 5; i++) {
-      await axios.post(`${BASE_URL}/speak`, { text: 'Hello' }, { headers: { 'xi-api-key': fakeKeys[0] } });
+    // Exhaust first key by hitting server limit (2)
+    for (let i = 1; i <= 2; i++) {
+      const res = await axios.post(
+        `${BASE_URL}/speak`,
+        { text: 'Hello' },
+        { headers: { 'xi-api-key': fakeKeys[0] } }
+      );
+      expect(res.status).toBe(200);
     }
     // Next call should be rate-limited (429)
     await expect(
-      axios.post(`${BASE_URL}/speak`, { text: 'Hello' }, { headers: { 'xi-api-key': fakeKeys[0] } })
+      axios.post(
+        `${BASE_URL}/speak`,
+        { text: 'Hello' },
+        { headers: { 'xi-api-key': fakeKeys[0] } }
+      )
     ).rejects.toMatchObject({ response: { status: 429 } });
     const key0 = await getKey('fakeapi'); expect(key0).toBe(fakeKeys[0]); markKeyAsFailed('fakeapi', key0);
     const key1 = await getKey('fakeapi'); expect(key1).toBe(fakeKeys[1]);
@@ -55,12 +64,21 @@ describe('Integration: Key Cycler & Mock API', () => {
     // Initialize client cycler for marking failures
     await getKey('fakeapi');
     for (const key of fakeKeys) {
-      // Exhaust each key on the server side
-      for (let i = 1; i <= 5; i++) {
-        await axios.post(`${BASE_URL}/speak`, { text: 'Hello' }, { headers: { 'xi-api-key': key } });
+      // Exhaust each key on the server side (2 usages)
+      for (let i = 1; i <= 2; i++) {
+        const res = await axios.post(
+          `${BASE_URL}/speak`,
+          { text: 'Hello' },
+          { headers: { 'xi-api-key': key } }
+        );
+        expect(res.status).toBe(200);
       }
       await expect(
-        axios.post(`${BASE_URL}/speak`, { text: 'Hello' }, { headers: { 'xi-api-key': key } })
+        axios.post(
+          `${BASE_URL}/speak`,
+          { text: 'Hello' },
+          { headers: { 'xi-api-key': key } }
+        )
       ).rejects.toMatchObject({ response: { status: 429 } });
       // Mark as failed in the cycler
       markKeyAsFailed('fakeapi', key);

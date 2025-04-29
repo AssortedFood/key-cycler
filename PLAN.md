@@ -33,7 +33,7 @@ These subtasks outline the steps needed to bring all Vitest tests back to passin
 ## 6. Enhance integration server behavior
 - 6.a Extend `mock/fakeApiServer` to accept a custom per-key usage limit:
   - [x] 6.a.i Add a parameter or environment variable to configure the per-key quota in `startMockServer`.
-  - [ ] 6.a.ii In the server, track usage counts per API key and enforce the limit: after N requests respond 429.
+  - [x] 6.a.ii In the server, track usage counts per API key and enforce the limit: after N requests respond 429.
   - [ ] 6.a.iii Write a small smoke test to verify the server correctly returns 429 on the N+1th request.
 
 - 6.b Configure and verify integration tests use the custom limit:

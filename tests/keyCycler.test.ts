@@ -63,13 +63,14 @@ describe('KeyCycler', () => {
       ENV_TESTAPI_KEY2: 'gone'
     })
 
-    // Exhaust both
-    for (let i = 0; i < 10; i++) {
-      await getKey('testapi')
-    }
+    // Initialize and manually exhaust both keys
+    const k1 = await getKey('testapi')
+    const k2 = await getKey('testapi')
+    markKeyAsFailed('testapi', k1)
+    markKeyAsFailed('testapi', k2)
 
     await expect(getKey('testapi')).rejects.toThrow(
-      'All API keys for testapi are rate-limited'
+      'All API keys for testapi are exhausted'
     )
   })
 

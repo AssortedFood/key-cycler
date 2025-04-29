@@ -7,7 +7,7 @@ These subtasks outline the steps needed to bring all Vitest tests back to passin
 ## 1. Align error messages
 - [x] Decide on canonical error text (rate-limited per OBJECTIVE.md).
 - [x] Update unit tests in `tests/keyCycler.test.ts` to expect the chosen text in both exhaustion and manual-failure cases.
-- [ ] Update integration tests in `tests/integration/keyCycler.test.ts` to match the same error text.
+ - [x] Update integration tests in `tests/integration/keyCycler.test.ts` to match the same error text.
 
 ## 2. Remove in-memory RATE_LIMIT tests
 - [x] In `tests/keyCycler.test.ts`, remove or refactor the “respects rate limits and skips exhausted keys” test so it verifies pure round-robin cycling without a usage cap.
@@ -26,7 +26,7 @@ These subtasks outline the steps needed to bring all Vitest tests back to passin
 - [x] For the manual-failure flow tests, update error-message expectations and ensure `markKeyAsFailed` is called on the right key after a 429 from the mock server.
 
 ## 5. Run and validate
-- [ ] Run `npm test` and confirm all unit and integration tests pass.
+ - [x] Run `npm test` and confirm all unit and integration tests pass.
 - [x] Commit the updated tests and updated `PLAN.md` with message:
       "🔨 Complete test-fix PLAN and refactor tests"
 

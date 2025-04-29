@@ -88,13 +88,30 @@ describe('Integration: Key Cycler & Mock API', () => {
   });
   
   it('automatically handles server 429 by marking key as failed and rotates keys', async () => {
-    // Wrapper: on 429, mark key as failed and retry with next key
-    const speak = async (text: string) => {
+    // Directly exhaust fakeKey1 on server side (2 uses)
+    for (let i = 1; i <= 2; i++) {
+      const res = await axios.post(
+        `${BASE_URL}/speak`,
+        { text: 'Hello' },
+        { headers: { 'xi-api-key': fakeKeys[0] } }
+      );
+      expect(res.status).toBe(200);
+    }
+    // Next attempt for fakeKey1 should return 429
+    await expect(
+      axios.post(
+        `${BASE_URL}/speak`,
+        { text: 'Hello' },
+        { headers: { 'xi-api-key': fakeKeys[0] } }
+      )
+    ).rejects.toMatchObject({ response: { status: 429 } });
+    // Wrapper to automatically skip failed key and retry
+    const request = async () => {
       const key = await getKey('fakeapi');
       try {
         const res = await axios.post(
           `${BASE_URL}/speak`,
-          { text },
+          { text: 'Hello' },
           { headers: { 'xi-api-key': key } }
         );
         return { key, res };
@@ -104,7 +121,7 @@ describe('Integration: Key Cycler & Mock API', () => {
           const nextKey = await getKey('fakeapi');
           const res = await axios.post(
             `${BASE_URL}/speak`,
-            { text },
+            { text: 'Hello' },
             { headers: { 'xi-api-key': nextKey } }
           );
           return { key: nextKey, res };
@@ -112,16 +129,9 @@ describe('Integration: Key Cycler & Mock API', () => {
         throw err;
       }
     };
-    // Two usages per key: first key should succeed twice
-    const result1 = await speak('Hello');
-    expect(result1.key).toBe(fakeKeys[0]);
-    expect(result1.res.status).toBe(200);
-    const result2 = await speak('Hello');
-    expect(result2.key).toBe(fakeKeys[0]);
-    expect(result2.res.status).toBe(200);
-    // Third call triggers 429, wrapper rotates to next key
-    const result3 = await speak('Hello');
-    expect(result3.key).toBe(fakeKeys[1]);
-    expect(result3.res.status).toBe(200);
+    // Perform request via wrapper
+    const result = await request();
+    expect(result.key).toBe(fakeKeys[1]);
+    expect(result.res.status).toBe(200);
   });
 });

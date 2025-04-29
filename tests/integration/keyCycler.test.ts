@@ -15,14 +15,28 @@ afterAll(async () => { await stopMockServer(); });
 beforeEach(() => { resetKeyUsage(); __resetCyclers__(); });
 
 describe('Integration: Key Cycler & Mock API', () => {
-  it('automatically cycles through all keys until exhaustion', async () => {
-    for (let i = 0; i < fakeKeys.length; i++) {
+  it('automatically cycles through all keys until exhaustion and respects server rate limits', async () => {
+    // With RATE_LIMIT = 2, expect each key to succeed twice before a rate limit error
+    const totalCalls = fakeKeys.length * 2;
+    for (let i = 0; i < totalCalls; i++) {
       const key = await getKey('fakeapi');
       expect(fakeKeys).toContain(key);
-      const res = await axios.post(`${BASE_URL}/speak`, { text: 'Hello' }, { headers: { 'xi-api-key': key } });
+      const res = await axios.post(
+        `${BASE_URL}/speak`,
+        { text: 'Hello' },
+        { headers: { 'xi-api-key': key } }
+      );
       expect(res.status).toBe(200);
     }
-    // No further getKey call: exhaustion handled via markKeyAsFailed and server 429
+    // Next call for the first key should be rate-limited (429)
+    const nextKey = await getKey('fakeapi');
+    await expect(
+      axios.post(
+        `${BASE_URL}/speak`,
+        { text: 'Hello' },
+        { headers: { 'xi-api-key': nextKey } }
+      )
+    ).rejects.toMatchObject({ response: { status: 429 } });
   });
   it('rotates to next key upon manual markKeyAsFailed after server 429', async () => {
     // Exhaust first key by hitting server limit (default 5)

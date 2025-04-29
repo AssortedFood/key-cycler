@@ -5,8 +5,8 @@ app.use(express.json());
 
 // In-memory usage map for /speak endpoint
 const keyUsage: Record<string, number> = {};
-// Per-key rate limit
-const RATE_LIMIT = 5;
+// Per-key rate limit (default 5; can be overridden via startMockServer parameter)
+let RATE_LIMIT = 5;
 
 /**
  * Reset all key usage counts (for testing)
@@ -33,7 +33,14 @@ app.post('/speak', (req, res) => {
 
 let server;
 
-export function startMockServer(port = 3000) {
+/**
+ * Start the mock server on the specified port.
+ * Optionally override the per-key rate limit by providing a second argument.
+ */
+export function startMockServer(port = 3000, rateLimit?: number) {
+  if (typeof rateLimit === 'number') {
+    RATE_LIMIT = rateLimit;
+  }
   return new Promise((resolve) => {
     server = app.listen(port, () => {
       console.log(`Mock API server listening on port ${port}`);

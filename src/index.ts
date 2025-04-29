@@ -4,5 +4,6 @@ export {
     markKeyAsFailed,
     __resetCyclers__,
     debugState,
+    createCycler,
   } from '../lib/keyCycler/index'
   

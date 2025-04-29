@@ -94,6 +94,26 @@ describe('Integration: Key Cycler & Mock API', () => {
 
 For a full example, see `tests/integration/keyCycler.test.ts`.
 
+## Exhaustion Reset Configuration
+
+Key Cycler can automatically reset exhausted or failed keys after a specified interval.
+Use the `createCycler` factory to configure a reset interval (in milliseconds):
+
+```ts
+import { createCycler } from 'key-cycler';
+
+// Reset all failed flags and usage counters every 1 hour (3600000 ms)
+const { getKey, markKeyAsFailed } = createCycler('11labs', { resetInterval: 3600000 });
+
+// Use as before
+async function callApi() {
+  const apiKey = await getKey('11labs');
+  // ...
+}
+```
+
+After the specified interval has elapsed since initialization or last reset, the cycler will clear its failure flags and usage counters, allowing keys to re-enter rotation.
+
 ## License
 
 This project is open source. Please see the LICENSE file for details.

@@ -59,5 +59,26 @@ Notes
 This pattern is transport-agnostic — it works with Axios, Fetch, SDKs, etc.
 
 apiName must match the environment prefix without typos (e.g., '11labs').
+  
+---
+  
+## Exhaustion Reset Configuration
+  
+For long-running processes, you may want keys to be eligible for reuse after a cooldown interval.
+Use the `createCycler` factory to configure a `resetInterval` (in milliseconds) per API:
+  
+```ts
+import { createCycler } from 'key-cycler';
+  
+// Reset failed keys every hour (3600000 ms)
+const { getKey, markKeyAsFailed } = createCycler('11labs', { resetInterval: 3600000 });
+  
+async function makeRequest() {
+  const apiKey = await getKey('11labs');
+  // ...
+}
+```
+  
+After `resetInterval` elapses, the cycler automatically clears its failure flags and usage counters, allowing all keys to re-enter rotation.
 
 

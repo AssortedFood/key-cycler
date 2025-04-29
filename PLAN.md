@@ -45,23 +45,23 @@ These subtasks outline the steps needed to bring all Vitest tests back to passin
   - [x] 6.c.ii Verify the next `getKey` returns the alternate key and that the request succeeds with status 200.
 
 ## 7. Plan for exhaustion-reset configuration
-- 7.a Define the reset interval concept and API:
-  - [ ] 7.a.i Determine acceptable interval formats (e.g. ISO duration string, cron expression, number of ms).
-  - [ ] 7.a.ii Add an optional `resetInterval` field to the cycler initialization/config object.
+ - 7.a Define the reset interval concept and API:
+  - [x] 7.a.i Determine acceptable interval formats (e.g. ISO duration string, cron expression, number of ms).
+  - [x] 7.a.ii Add an optional `resetInterval` field to the cycler initialization/config object.
 
-- 7.b Extend cycler factory to accept configuration:
-  - [ ] 7.b.i Implement a factory function (e.g. `createCycler(apiName, options)`) that accepts `resetInterval`.
-  - [ ] 7.b.ii Ensure backward compatibility by defaulting to no reset when option omitted.
+ - 7.b Extend cycler factory to accept configuration:
+  - [x] 7.b.i Implement a factory function (e.g. `createCycler(apiName, options)`) that accepts `resetInterval`.
+  - [x] 7.b.ii Ensure backward compatibility by defaulting to no reset when option omitted.
 
-- 7.c Implement periodic state reset:
-  - [ ] 7.c.i On each `getKey` call, check if `now >= lastReset + resetInterval`; if so, clear `failed` flags and reset usage counters.
-  - [ ] 7.c.ii Persist `lastReset` timestamp in the cycler state.
+ - 7.c Implement periodic state reset:
+  - [x] 7.c.i On each `getKey` call, check if `now >= lastReset + resetInterval`; if so, clear `failed` flags and reset usage counters.
+  - [x] 7.c.ii Persist `lastReset` timestamp in the cycler state.
 
-- 7.d Write unit tests for reset logic:
-  - [ ] 7.d.i Use mocked timers to simulate clock advancing beyond `resetInterval`.
-  - [ ] 7.d.ii Confirm that after the interval expires, previously `failed` keys re-enter rotation.
-  - [ ] 7.d.iii Confirm that usage counters reset if desired by configuration.
+ - 7.d Write unit tests for reset logic:
+  - [x] 7.d.i Use mocked timers to simulate clock advancing beyond `resetInterval`.
+  - [x] 7.d.ii Confirm that after the interval expires, previously `failed` keys re-enter rotation.
+  - [x] 7.d.iii Confirm that usage counters reset if desired by configuration.
 
-- 7.e Update documentation:
-  - [ ] 7.e.i Add `resetInterval` usage section to README.
-  - [ ] 7.e.ii Document new factory API in OBJECTIVE.md and usage examples.
+ - 7.e Update documentation:
+  - [x] 7.e.i Add `resetInterval` usage section to README.
+  - [x] 7.e.ii Document new factory API in OBJECTIVE.md and usage examples.

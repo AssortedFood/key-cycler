@@ -13,14 +13,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getKey = getKey;
 exports.markKeyAsFailed = markKeyAsFailed;
 exports.__resetCyclers__ = __resetCyclers__;
+exports.createCycler = createCycler;
 exports.debugState = debugState;
-const RATE_LIMIT = 5; // your per-key hard limit
+// const RATE_LIMIT = 5;  // removed hard-coded per-key limit
 // In-memory store: one Cycler per API name
 const cyclers = new Map();
 /**
  * Initialise a cycler for this apiName by loading ENV_<API>_KEY1…N
  */
-function initCycler(apiName) {
+/**
+ * Initialize a cycler for this apiName, with optional resetInterval (ms).
+ */
+function initCycler(apiName, options) {
     const prefix = `ENV_${apiName.toUpperCase()}_KEY`;
     const states = [];
     let idx = 1;
@@ -36,6 +40,10 @@ function initCycler(apiName) {
         throw new Error(`No keys found for ${apiName}`);
     }
     const cycler = { keys: states, pointer: 0 };
+    if ((options === null || options === void 0 ? void 0 : options.resetInterval) != null) {
+        cycler.resetInterval = options.resetInterval;
+        cycler.lastReset = Date.now();
+    }
     cyclers.set(apiName, cycler);
     return cycler;
 }
@@ -45,7 +53,20 @@ function initCycler(apiName) {
 function getKey(apiName) {
     return __awaiter(this, void 0, void 0, function* () {
         var _a;
+        // Retrieve or initialize cycler (no resetInterval by default)
         const cycler = (_a = cyclers.get(apiName)) !== null && _a !== void 0 ? _a : initCycler(apiName);
+        // Handle periodic reset if configured
+        if (cycler.resetInterval != null && cycler.lastReset != null) {
+            const now = Date.now();
+            if (now - cycler.lastReset >= cycler.resetInterval) {
+                // Reset failed flags and usage counters
+                cycler.lastReset = now;
+                for (const state of cycler.keys) {
+                    state.failed = false;
+                    state.usage = 0;
+                }
+            }
+        }
         const { keys } = cycler;
         const len = keys.length;
         for (let attempt = 0; attempt < len; attempt++) {
@@ -55,13 +76,11 @@ function getKey(apiName) {
             const state = keys[idx];
             if (state.failed)
                 continue;
-            if (state.usage >= RATE_LIMIT)
-                continue;
             // found a live key
             state.usage += 1;
             return state.value;
         }
-        throw new Error(`All API keys for ${apiName} are rate-limited`);
+        throw new Error(`All API keys for ${apiName} are exhausted`);
     });
 }
 /**
@@ -80,6 +99,21 @@ function markKeyAsFailed(apiName, key) {
  */
 function __resetCyclers__() {
     cyclers.clear();
+}
+/**
+ * Factory to create a cycler with configuration options.
+ * Returns bound getKey, markKeyAsFailed, and debugState functions.
+ */
+function createCycler(apiName, options) {
+    // Remove existing cycler to apply new options
+    cyclers.delete(apiName);
+    // Initialize with options
+    initCycler(apiName, options);
+    return {
+        getKey: () => getKey(apiName),
+        markKeyAsFailed: (key) => markKeyAsFailed(apiName, key),
+        debugState: () => debugState(apiName),
+    };
 }
 /**
  * Return a read-only snapshot of pointer, usage and failure flags.

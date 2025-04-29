@@ -68,4 +68,42 @@ describe('Integration: Key Cycler & Mock API', () => {
     // Expect cycler to throw when no keys remain
     await expect(getKey('fakeapi')).rejects.toThrow('All API keys for fakeapi are exhausted');
   });
+  
+  it('automatically handles server 429 by marking key as failed and rotates keys', async () => {
+    // Wrapper: on 429, mark key as failed and retry with next key
+    const speak = async (text: string) => {
+      const key = await getKey('fakeapi');
+      try {
+        const res = await axios.post(
+          `${BASE_URL}/speak`,
+          { text },
+          { headers: { 'xi-api-key': key } }
+        );
+        return { key, res };
+      } catch (err: any) {
+        if (err.response?.status === 429) {
+          markKeyAsFailed('fakeapi', key);
+          const nextKey = await getKey('fakeapi');
+          const res = await axios.post(
+            `${BASE_URL}/speak`,
+            { text },
+            { headers: { 'xi-api-key': nextKey } }
+          );
+          return { key: nextKey, res };
+        }
+        throw err;
+      }
+    };
+    // Two usages per key: first key should succeed twice
+    const result1 = await speak('Hello');
+    expect(result1.key).toBe(fakeKeys[0]);
+    expect(result1.res.status).toBe(200);
+    const result2 = await speak('Hello');
+    expect(result2.key).toBe(fakeKeys[0]);
+    expect(result2.res.status).toBe(200);
+    // Third call triggers 429, wrapper rotates to next key
+    const result3 = await speak('Hello');
+    expect(result3.key).toBe(fakeKeys[1]);
+    expect(result3.res.status).toBe(200);
+  });
 });
